@@ -25,12 +25,12 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     ""maps"": [
         {
             ""name"": ""Default"",
-            ""id"": ""9851aa30-24f1-40e7-826e-e54f2f8eac88"",
+            ""id"": ""1928b729-1389-4526-9930-a63747d7baa8"",
             ""actions"": [
                 {
                     ""name"": ""Horizontal"",
                     ""type"": ""Button"",
-                    ""id"": ""898f8f54-418c-4bf8-a20e-0db0f5759fbd"",
+                    ""id"": ""30ddd13e-a6a9-40bf-ac03-2165f8355202"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -39,7 +39,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Vertical"",
                     ""type"": ""Button"",
-                    ""id"": ""a5741064-6e96-4402-a637-9023f4bb27ec"",
+                    ""id"": ""8686d26f-d400-4ea8-9a14-d797356e428b"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -49,7 +49,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
             ""bindings"": [
                 {
                     ""name"": ""1D Axis"",
-                    ""id"": ""3e81e801-5fcc-49e7-84ad-ac2d4e40953e"",
+                    ""id"": ""195f9a7c-1406-4bec-8241-609c633c3e4b"",
                     ""path"": ""1DAxis"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -59,19 +59,8 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""negative"",
-                    ""id"": ""cb916198-aa56-4444-a0ae-ed019a342c50"",
-                    ""path"": ""<Keyboard>/a"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Horizontal"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
                     ""name"": ""positive"",
-                    ""id"": ""72c78097-7a11-4ffa-9b28-cfc6fe45700c"",
+                    ""id"": ""ab9a4d97-3c53-4f5a-8838-05b1d3d4146a"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -81,8 +70,19 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
+                    ""name"": ""negative"",
+                    ""id"": ""8b3ef611-1e1e-445d-8297-585a4ef8d82f"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Horizontal"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
                     ""name"": ""1D Axis"",
-                    ""id"": ""a4747b6a-5c72-4c4a-94fe-ed02f1ee4673"",
+                    ""id"": ""7e8ade0b-5fb9-47bd-a347-07d3c3603d82"",
                     ""path"": ""1DAxis"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -92,9 +92,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""negative"",
-                    ""id"": ""17b384eb-1ebf-4511-92a9-c8ee0f0ed761"",
-                    ""path"": ""<Keyboard>/s"",
+                    ""name"": ""positive"",
+                    ""id"": ""b1724ddb-7d33-4471-bdf1-5615ea563939"",
+                    ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -103,9 +103,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""positive"",
-                    ""id"": ""45d5b694-02ff-4c42-9122-855f0ee88a20"",
-                    ""path"": ""<Keyboard>/w"",
+                    ""name"": ""negative"",
+                    ""id"": ""a3128864-545b-4b99-8f35-abd4a24f569d"",
+                    ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
