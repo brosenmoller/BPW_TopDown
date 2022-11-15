@@ -1,39 +1,44 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public abstract class PlayerAbility : MonoBehaviour
 {
     [HideInInspector] public PlayerAbilitys abilityType;
 
-    protected PlayerController player;
     protected Rigidbody2D rb;
     protected Animator anim;
+    protected SpriteRenderer spriteHolder;
+    protected PlayerAbilityManager abilityManager;
 
-    // Binding references
     private void Awake()
     {
-        player = GetComponent<PlayerController>();
         SetAbilityType();
     }
 
-    // Check on load if the player has access to a certain ability and 
-    // Then enable and initialize the component if necessary
     protected virtual void Start()
     {
-        if (!player.abilityManager.accesableAbilitys.Contains(abilityType))
+        abilityManager = GetComponent<PlayerAbilityManager>();
+        if (!abilityManager.accesableAbilitys.Contains(abilityType))
         {
             enabled = false;
+            return;
         }
+        
+        Initialize();
 
-        rb = player.rb;
-        anim = player.anim;
-
-        if (enabled) Initialize();
+        rb = GetComponent<Rigidbody2D>();
+        //anim = GetComponent<Animator>();
+        spriteHolder = transform.GetChild(0).GetComponent<SpriteRenderer>();
     }
+
+
+
     protected abstract void SetAbilityType();
     public abstract void Initialize();
 }
 
 public enum PlayerAbilitys
 {
-    Move
+    Move,
+    Shoot
 }

@@ -11,23 +11,13 @@ public class MoveAbility : PlayerAbility
 
     public override void Initialize()
     {
-        //Set Up Controls
-        player.controls.Default.Horizontal.performed += movemt_ctx => SetMovementHorizontal((int)movemt_ctx.ReadValue<float>());
-        player.controls.Default.Horizontal.canceled += _ => SetMovementHorizontal(0);
-        player.controls.Default.Vertical.performed += movemt_ctx => SetMovementVertical((int)movemt_ctx.ReadValue<float>());
-        player.controls.Default.Vertical.canceled += _ => SetMovementVertical(0);
+        abilityManager.controls.Default.Movement.performed += movemt_ctx => SetMovement(movemt_ctx.ReadValue<Vector2>());
+        abilityManager.controls.Default.Movement.canceled += _ => SetMovement(Vector2.zero);
     }
 
-    public void SetMovementHorizontal(int newMovement)
+    public void SetMovement(Vector2 newMovement)
     {
-        movement.x = newMovement;
-        //anim.SetBool("isMoving", movement != 0);
-        //effects.FlipSprite(movement);
-    }
-    
-    public void SetMovementVertical(int newMovement)
-    {
-        movement.y = newMovement;
+        movement = newMovement;
         //anim.SetBool("isMoving", movement != 0);
         //effects.FlipSprite(movement);
     }

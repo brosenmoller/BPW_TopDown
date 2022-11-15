@@ -1,13 +1,33 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerAbilityManager : MonoBehaviour
 {
     public List<PlayerAbilitys> accesableAbilitys = new();
     private readonly Dictionary<PlayerAbilitys, PlayerAbility> playerAbilitysDictionary = new();
 
-    private void Start()
+    [HideInInspector] public Controls controls;
+    [HideInInspector] public bool usingGamepad = false;
+
+    public void OnDeviceChange(PlayerInput playerInput)
+    {
+        usingGamepad = playerInput.currentControlScheme.Equals("Gamepad");
+    }
+
+    private void OnEnable()
+    {
+        controls ??= new Controls();
+        controls.Default.Enable();
+    }
+
+    private void OnDisable()
+    {
+        controls.Default.Disable();
+    }
+
+    private void Awake()
     {
         SetUpAbilityDictionary();
     }
@@ -15,6 +35,7 @@ public class PlayerAbilityManager : MonoBehaviour
     private void SetUpAbilityDictionary()
     {
         playerAbilitysDictionary.Add(PlayerAbilitys.Move, GetComponent<MoveAbility>());
+        playerAbilitysDictionary.Add(PlayerAbilitys.Shoot, GetComponent<ShootAbility>());
     }
 
     public void GiveAbility(int intAbility)
