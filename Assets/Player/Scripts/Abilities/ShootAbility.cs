@@ -7,10 +7,11 @@ public class ShootAbility : PlayerAbility
     [SerializeField] private GameObject bullet;
 
     private Camera mainCamera;
-    private Vector2 previousVector2Input;
-    private Vector2 shootDirection;
 
-    Quaternion targetRotation;
+    private Vector2 previousVector2Input;
+    private Quaternion targetRotation;
+
+    protected Vector2 shootDirection;
 
     protected override void SetAbilityType() => abilityType = PlayerAbilitys.Shoot;
 
