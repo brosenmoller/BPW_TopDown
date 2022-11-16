@@ -1,6 +1,4 @@
-using System.Drawing;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class ShootAbility : PlayerAbility
 {
@@ -9,8 +7,10 @@ public class ShootAbility : PlayerAbility
     [SerializeField] private GameObject bullet;
 
     private Camera mainCamera;
-    private Vector2 mouseScreenPosition;
+    private Vector2 previousVector2Input;
     private Vector2 shootDirection;
+
+    Quaternion targetRotation;
 
     protected override void SetAbilityType() => abilityType = PlayerAbilitys.Shoot;
 
@@ -20,19 +20,33 @@ public class ShootAbility : PlayerAbility
 
         abilityManager.controls.Default.Shoot.performed += _ => Shoot();
         abilityManager.controls.Default.Aiming.performed += ctx => SetShootDirection(ctx.ReadValue<Vector2>());
-        abilityManager.controls.Default.Movement.started += _ => UpdateShootDirection();
+    }
+
+    private void FixedUpdate()
+    {
+        if (abilityManager.controls.Default.Movement.IsPressed())
+        {
+            UpdateShootDirection();
+        }
+
+        if (transform.rotation != targetRotation)
+        {
+            transform.rotation = targetRotation;
+        }
     }
 
     private void SetShootDirection(Vector2 vector2Input)
     {
+        if (previousVector2Input == vector2Input) { return; }
+        previousVector2Input = vector2Input;
+
         if (abilityManager.usingGamepad)
         {
-            if (vector2Input != Vector2.zero) shootDirection = vector2Input;
+            shootDirection = vector2Input;
         }
         else
         {
-            mouseScreenPosition = vector2Input;
-            Vector2 mouseWorldPosition = mainCamera.ScreenToWorldPoint(mouseScreenPosition);
+            Vector2 mouseWorldPosition = mainCamera.ScreenToWorldPoint(previousVector2Input);
             shootDirection = (mouseWorldPosition - (Vector2)transform.position).normalized;
         }
 
@@ -43,7 +57,7 @@ public class ShootAbility : PlayerAbility
     {
         if (abilityManager.usingGamepad) { return; }
 
-        Vector2 mouseWorldPosition = mainCamera.ScreenToWorldPoint(mouseScreenPosition);
+        Vector2 mouseWorldPosition = mainCamera.ScreenToWorldPoint(previousVector2Input);
         shootDirection = (mouseWorldPosition - (Vector2)transform.position).normalized;
 
         LookTowardsShootDirection();
@@ -52,7 +66,7 @@ public class ShootAbility : PlayerAbility
     private void LookTowardsShootDirection()
     {
         float angle = Vector2.SignedAngle(Vector2.right, shootDirection);
-        transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
+        targetRotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
     }
 
     private void Shoot()

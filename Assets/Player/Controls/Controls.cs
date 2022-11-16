@@ -160,7 +160,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""id"": ""42fbd3cb-bda5-4a27-a35e-90cc0b5e90f0"",
                     ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""StickDeadzone"",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Aiming"",
                     ""isComposite"": false,
