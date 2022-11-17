@@ -1,18 +1,24 @@
 ﻿using UnityEngine;
 
-public class MoveAbility : PlayerAbility
+public class MoveAbility : BasePlayerAbility
 {
     [Header("Movement Settings")]
-    [SerializeField] float speed;
+    [SerializeField] private float speed;
 
     private Vector2 movement;
 
     protected override void SetAbilityType() => abilityType = PlayerAbilitys.Move;
 
-    public override void Initialize()
+    public override void Setup()
     {
         abilityManager.controls.Default.Movement.performed += movemt_ctx => SetMovement(movemt_ctx.ReadValue<Vector2>());
         abilityManager.controls.Default.Movement.canceled += _ => SetMovement(Vector2.zero);
+    }
+
+    public override void Unset()
+    {
+        abilityManager.controls.Default.Movement.performed -= movemt_ctx => SetMovement(movemt_ctx.ReadValue<Vector2>());
+        abilityManager.controls.Default.Movement.canceled -= _ => SetMovement(Vector2.zero);
     }
 
     public void SetMovement(Vector2 newMovement)
@@ -23,11 +29,6 @@ public class MoveAbility : PlayerAbility
     }
 
     private void FixedUpdate()
-    {
-        Movement();
-    }
-
-    private void Movement()
     {
         rb.velocity = speed * Time.deltaTime * movement.normalized;
     }

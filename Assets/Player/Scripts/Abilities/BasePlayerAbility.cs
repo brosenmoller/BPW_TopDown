@@ -1,7 +1,6 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public abstract class PlayerAbility : MonoBehaviour
+public abstract class BasePlayerAbility : MonoBehaviour
 {
     [HideInInspector] public PlayerAbilitys abilityType;
 
@@ -24,21 +23,14 @@ public abstract class PlayerAbility : MonoBehaviour
             return;
         }
         
-        Initialize();
+        Setup();
 
         rb = GetComponent<Rigidbody2D>();
         //anim = GetComponent<Animator>();
         spriteHolder = transform.GetChild(0).GetComponent<SpriteRenderer>();
     }
 
-
-
     protected abstract void SetAbilityType();
-    public abstract void Initialize();
-}
-
-public enum PlayerAbilitys
-{
-    Move,
-    Shoot
+    public abstract void Setup();
+    public abstract void Unset();
 }

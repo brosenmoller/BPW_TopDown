@@ -46,9 +46,18 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Shoot"",
+                    ""name"": ""Attack"",
                     ""type"": ""Button"",
                     ""id"": ""632f601e-bf84-46ba-a192-62a1e494e3d3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Dodge"",
+                    ""type"": ""Button"",
+                    ""id"": ""76002980-0b2f-4240-a06c-7d1244c94db8"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -129,7 +138,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard_Mouse"",
-                    ""action"": ""Shoot"",
+                    ""action"": ""Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -140,7 +149,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""Shoot"",
+                    ""action"": ""Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -163,6 +172,28 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""processors"": ""StickDeadzone"",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Aiming"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b09ef7a5-55a9-435f-9755-defbbdc0e13c"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard_Mouse"",
+                    ""action"": ""Dodge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3dfef0d1-cd56-4a40-824a-06eae34bedc5"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Dodge"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -203,7 +234,8 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         m_Default = asset.FindActionMap("Default", throwIfNotFound: true);
         m_Default_Movement = m_Default.FindAction("Movement", throwIfNotFound: true);
         m_Default_Aiming = m_Default.FindAction("Aiming", throwIfNotFound: true);
-        m_Default_Shoot = m_Default.FindAction("Shoot", throwIfNotFound: true);
+        m_Default_Attack = m_Default.FindAction("Attack", throwIfNotFound: true);
+        m_Default_Dodge = m_Default.FindAction("Dodge", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -265,14 +297,16 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     private IDefaultActions m_DefaultActionsCallbackInterface;
     private readonly InputAction m_Default_Movement;
     private readonly InputAction m_Default_Aiming;
-    private readonly InputAction m_Default_Shoot;
+    private readonly InputAction m_Default_Attack;
+    private readonly InputAction m_Default_Dodge;
     public struct DefaultActions
     {
         private @Controls m_Wrapper;
         public DefaultActions(@Controls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_Default_Movement;
         public InputAction @Aiming => m_Wrapper.m_Default_Aiming;
-        public InputAction @Shoot => m_Wrapper.m_Default_Shoot;
+        public InputAction @Attack => m_Wrapper.m_Default_Attack;
+        public InputAction @Dodge => m_Wrapper.m_Default_Dodge;
         public InputActionMap Get() { return m_Wrapper.m_Default; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -288,9 +322,12 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @Aiming.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnAiming;
                 @Aiming.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnAiming;
                 @Aiming.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnAiming;
-                @Shoot.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnShoot;
-                @Shoot.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnShoot;
-                @Shoot.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnShoot;
+                @Attack.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnAttack;
+                @Attack.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnAttack;
+                @Attack.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnAttack;
+                @Dodge.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnDodge;
+                @Dodge.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnDodge;
+                @Dodge.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnDodge;
             }
             m_Wrapper.m_DefaultActionsCallbackInterface = instance;
             if (instance != null)
@@ -301,9 +338,12 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @Aiming.started += instance.OnAiming;
                 @Aiming.performed += instance.OnAiming;
                 @Aiming.canceled += instance.OnAiming;
-                @Shoot.started += instance.OnShoot;
-                @Shoot.performed += instance.OnShoot;
-                @Shoot.canceled += instance.OnShoot;
+                @Attack.started += instance.OnAttack;
+                @Attack.performed += instance.OnAttack;
+                @Attack.canceled += instance.OnAttack;
+                @Dodge.started += instance.OnDodge;
+                @Dodge.performed += instance.OnDodge;
+                @Dodge.canceled += instance.OnDodge;
             }
         }
     }
@@ -330,6 +370,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     {
         void OnMovement(InputAction.CallbackContext context);
         void OnAiming(InputAction.CallbackContext context);
-        void OnShoot(InputAction.CallbackContext context);
+        void OnAttack(InputAction.CallbackContext context);
+        void OnDodge(InputAction.CallbackContext context);
     }
 }
