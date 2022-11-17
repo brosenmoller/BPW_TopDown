@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,18 +9,6 @@ public enum PlayerAbilitys
     ShootAttack,
     SwordAttack,
 }
-
-//public class PlayerAbilitys
-//{
-//    public const int Move = 0;
-//    public const int Dodge = 1;
-//}
-
-//public class AttackAbilitys : PlayerAbilitys
-//{
-//    public const int ShootAttack = 100;
-//    public const int SwordAttack = 101;
-//}
 
 public class PlayerAbilityManager : MonoBehaviour
 {
@@ -64,21 +51,24 @@ public class PlayerAbilityManager : MonoBehaviour
         playerAbilitysDictionary.Add(PlayerAbilitys.SwordAttack, GetComponent<SwordAttackAbility>());
     }
 
-    public void ChangeAttackAbility(PlayerAbilitys attackAbility)
+    public void SetAttackAbility(PlayerAbilitys attackAbility)
     {
-
-    }
-
-    public void GiveAbility(int intAbility)
-    {
-        if (!Enum.IsDefined(typeof(PlayerAbilitys), intAbility))
+        if (attackAbility != activeAttackAbility)
         {
-            Debug.LogWarning($"Enum PlayerAbilitys doesn't contain definition for, intValue: {intAbility}");
-        }
+            playerAbilitysDictionary[activeAttackAbility].Unset();
+            playerAbilitysDictionary[activeAttackAbility].enabled = false;
 
-        PlayerAbilitys ability = (PlayerAbilitys)intAbility;
-        GiveAbility(ability);
+            playerAbilitysDictionary[attackAbility].enabled = true;
+            playerAbilitysDictionary[attackAbility].Setup();
+        }
     }
+
+    public void UnsetActiveAttackAbility()
+    {
+        playerAbilitysDictionary[activeAttackAbility].Unset();
+        playerAbilitysDictionary[activeAttackAbility].enabled = false;
+    }
+
     public void GiveAbility(PlayerAbilitys ability)
     {
         if (!accesableAbilitys.Contains(ability))
@@ -89,24 +79,13 @@ public class PlayerAbilityManager : MonoBehaviour
         }
     }
 
-    public void RemoveAbility(int intAbility)
-    {
-        if (!Enum.IsDefined(typeof(PlayerAbilitys), intAbility))
-        {
-            Debug.LogWarning($"Enum PlayerAbilitys doesn't contain definition for, intValue: {intAbility}");
-        }
-
-        PlayerAbilitys ability = (PlayerAbilitys)intAbility;
-        RemoveAbility(ability);
-    }
-
     public void RemoveAbility(PlayerAbilitys ability)
     {
         if (accesableAbilitys.Contains(ability))
         {
             accesableAbilitys.Remove(ability);
+            playerAbilitysDictionary[ability].Unset();
             playerAbilitysDictionary[ability].enabled = false;
-            playerAbilitysDictionary[ability].Setup();
         }
     }
 }

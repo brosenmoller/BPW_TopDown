@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 public abstract class BaseAttackAbility : BasePlayerAbility
 {
@@ -12,22 +13,33 @@ public abstract class BaseAttackAbility : BasePlayerAbility
 
     protected Vector2 attackDirection;
 
+    protected override void Start()
+    {
+        base.Start();
+
+        if (abilityManager.activeAttackAbility != abilityType) 
+        {
+            Unset();
+            enabled = false;
+        }
+    }
+
     public override void Setup()
     {
         mainCamera = Camera.main;
         weaponHolder = transform.GetChild(1);
 
-        abilityManager.controls.Default.Attack.performed += _ => PerformAttack();
-        abilityManager.controls.Default.Aiming.performed += ctx => SetAttackDirection(ctx.ReadValue<Vector2>());
+        abilityManager.controls.Default.Attack.performed += PerformAttack;
+        abilityManager.controls.Default.Aiming.performed += SetAttackDirection;
     }
 
     public override void Unset()
     {
-        abilityManager.controls.Default.Attack.performed -= _ => PerformAttack();
-        abilityManager.controls.Default.Aiming.performed -= ctx => SetAttackDirection(ctx.ReadValue<Vector2>());
+        abilityManager.controls.Default.Attack.performed -= PerformAttack;
+        abilityManager.controls.Default.Aiming.performed -= SetAttackDirection;
     }
 
-    protected abstract void PerformAttack();
+    protected abstract void PerformAttack(InputAction.CallbackContext context);
 
     private void FixedUpdate()
     {
@@ -46,8 +58,9 @@ public abstract class BaseAttackAbility : BasePlayerAbility
         }
     }
 
-    private void SetAttackDirection(Vector2 vector2Input)
+    private void SetAttackDirection(InputAction.CallbackContext context)
     {
+        Vector2 vector2Input = context.ReadValue<Vector2>();
         if (previousVector2Input == vector2Input) { return; }
         
         previousVector2Input = vector2Input;

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class MoveAbility : BasePlayerAbility
 {
@@ -11,21 +12,24 @@ public class MoveAbility : BasePlayerAbility
 
     public override void Setup()
     {
-        abilityManager.controls.Default.Movement.performed += movemt_ctx => SetMovement(movemt_ctx.ReadValue<Vector2>());
-        abilityManager.controls.Default.Movement.canceled += _ => SetMovement(Vector2.zero);
+        abilityManager.controls.Default.Movement.performed += SetMovement;
+        abilityManager.controls.Default.Movement.canceled += ResetMovement;
     }
 
     public override void Unset()
     {
-        abilityManager.controls.Default.Movement.performed -= movemt_ctx => SetMovement(movemt_ctx.ReadValue<Vector2>());
-        abilityManager.controls.Default.Movement.canceled -= _ => SetMovement(Vector2.zero);
+        abilityManager.controls.Default.Movement.performed -= SetMovement;
+        abilityManager.controls.Default.Movement.canceled -= ResetMovement;
     }
 
-    public void SetMovement(Vector2 newMovement)
+    public void SetMovement(InputAction.CallbackContext context)
     {
-        movement = newMovement;
-        //anim.SetBool("isMoving", movement != 0);
-        //effects.FlipSprite(movement);
+        movement = context.ReadValue<Vector2>();
+    }
+
+    public void ResetMovement(InputAction.CallbackContext context)
+    {
+        movement = Vector2.zero;
     }
 
     private void FixedUpdate()

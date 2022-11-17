@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ShootAttackAbility : BaseAttackAbility
 {
@@ -8,7 +9,7 @@ public class ShootAttackAbility : BaseAttackAbility
 
     protected override void SetAbilityType() => abilityType = PlayerAbilitys.ShootAttack;
 
-    protected override void PerformAttack()
+    protected override void PerformAttack(InputAction.CallbackContext context)
     {
         if (attackDirection == null || attackDirection == Vector2.zero) { return; }
 

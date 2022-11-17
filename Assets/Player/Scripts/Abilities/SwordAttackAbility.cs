@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class SwordAttackAbility : BaseAttackAbility
 {
@@ -7,16 +8,16 @@ public class SwordAttackAbility : BaseAttackAbility
 
     private float cooldownTimer = 0;
 
-    protected override void SetAbilityType() => abilityType = PlayerAbilitys.ShootAttack;
+    protected override void SetAbilityType() => abilityType = PlayerAbilitys.SwordAttack;
 
-    protected override void PerformAttack()
+    protected override void PerformAttack(InputAction.CallbackContext context)
     {
         if (attackDirection == null || attackDirection == Vector2.zero) { return; }
         
         if (Time.time < cooldownTimer) { return; }
         cooldownTimer = Time.time + cooldown;
 
-        Debug.Log("SwordAttack");
+        Debug.Log("PerformSwordAttack");
     }
 }
 
