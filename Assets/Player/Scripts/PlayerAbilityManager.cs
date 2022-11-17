@@ -3,25 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-//public enum PlayerAbilitys
+public enum PlayerAbilitys
+{
+    Move,
+    Dodge,
+    ShootAttack,
+    SwordAttack,
+}
+
+//public class PlayerAbilitys
 //{
-//    Move,
-//    Dodge,
-//    ShootAttack,
-//    SwordAttack,
+//    public const int Move = 0;
+//    public const int Dodge = 1;
 //}
 
-public class PlayerAbilitys
-{
-    public const int Move = 0;
-    public const int Dodge = 1;
-}
-
-public class AttackAbilitys : PlayerAbilitys
-{
-    public const int ShootAttack = 100;
-    public const int SwordAttack = 101;
-}
+//public class AttackAbilitys : PlayerAbilitys
+//{
+//    public const int ShootAttack = 100;
+//    public const int SwordAttack = 101;
+//}
 
 public class PlayerAbilityManager : MonoBehaviour
 {
