@@ -7,8 +7,6 @@ public class ShootAttackAbility : BaseAttackAbility
     [SerializeField] private float bulletSpeed;
     [SerializeField] private GameObject bullet;
 
-    protected override void SetAbilityType() => abilityType = PlayerAbilitys.ShootAttack;
-
     protected override void PerformAttack(InputAction.CallbackContext context)
     {
         if (attackDirection == null || attackDirection == Vector2.zero) { return; }

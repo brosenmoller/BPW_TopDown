@@ -8,8 +8,6 @@ public class SwordAttackAbility : BaseAttackAbility
 
     private float cooldownTimer = 0;
 
-    protected override void SetAbilityType() => abilityType = PlayerAbilitys.SwordAttack;
-
     protected override void PerformAttack(InputAction.CallbackContext context)
     {
         if (attackDirection == null || attackDirection == Vector2.zero) { return; }

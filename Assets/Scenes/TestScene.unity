@@ -1060,7 +1060,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18e087509e612234b829279969cb5c46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  abilityType: 0
   speed: 500
 --- !u!114 &1495544472
 MonoBehaviour:
@@ -1074,8 +1073,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed86149dfb7f35847abbdbd7441013f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  accesableAbilitys: 00000000010000000200000003000000
-  activeAttackAbility: 2
+  activeAttackAbility: {fileID: 1495544475}
+  rb: {fileID: 1495544469}
+  spriteHolder: {fileID: 2016162002}
   usingGamepad: 0
 --- !u!114 &1495544474
 MonoBehaviour:
@@ -1148,7 +1148,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d2fc17173dd5c7408a460e747b73808, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  abilityType: 0
   weaponHolder: {fileID: 602029314}
   bulletSpeed: 100
   bullet: {fileID: 1420835834478424923, guid: eea797bba5f99134fb90fd835d0db243, type: 3}
@@ -1164,7 +1163,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86fbca3930b6f834c9a727387dd5c509, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  abilityType: 0
   weaponHolder: {fileID: 602029314}
   cooldown: 1
 --- !u!114 &1495544477
@@ -1179,7 +1177,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9983fd95f0c83c74cb78639fddf88ecc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  abilityType: 0
   speedMultiplier: 4
   duration: 0.1
   cooldown: 0.5
@@ -1299,6 +1296,37 @@ Transform:
   - {fileID: 201641658}
   m_Father: {fileID: 0}
   m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1998496686
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1998496687}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1998496687
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1998496686}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2016162000
 GameObject:

@@ -8,8 +8,6 @@ public class MoveAbility : BasePlayerAbility
 
     private Vector2 movement;
 
-    protected override void SetAbilityType() => abilityType = PlayerAbilitys.Move;
-
     public override void Setup()
     {
         abilityManager.controls.Default.Movement.performed += SetMovement;

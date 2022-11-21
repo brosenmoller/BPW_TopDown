@@ -12,8 +12,6 @@ public class DodgeAbility : BasePlayerAbility
 
     private bool canDodge = true;
 
-    protected override void SetAbilityType() => abilityType = PlayerAbilitys.Move;
-
     public override void Setup()
     {
         abilityManager.controls.Default.Dodge.started += StartDodge;
@@ -35,7 +33,7 @@ public class DodgeAbility : BasePlayerAbility
 
     private IEnumerator Dodging()
     {
-        abilityManager.RemoveAbility(PlayerAbilitys.Move);
+        abilityManager.RemoveAbility(typeof(MoveAbility));
         canDodge = false;
 
         Time.timeScale = .9f;
@@ -47,7 +45,7 @@ public class DodgeAbility : BasePlayerAbility
 
         Time.timeScale = 1f;
 
-        abilityManager.GiveAbility(PlayerAbilitys.Move);
+        abilityManager.GiveAbility(typeof(MoveAbility));
         rb.velocity = previousVelocity;
 
         yield return new WaitForSeconds(cooldown);

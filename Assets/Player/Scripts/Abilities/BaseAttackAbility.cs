@@ -13,11 +13,9 @@ public abstract class BaseAttackAbility : BasePlayerAbility
 
     protected Vector2 attackDirection;
 
-    protected override void Start()
+    protected override void Initialize()
     {
-        base.Start();
-
-        if (abilityManager.activeAttackAbility != abilityType) 
+        if (abilityManager.activeAttackAbility != this)
         {
             Unset();
             enabled = false;
@@ -27,7 +25,6 @@ public abstract class BaseAttackAbility : BasePlayerAbility
     public override void Setup()
     {
         mainCamera = Camera.main;
-        weaponHolder = transform.GetChild(1);
 
         abilityManager.controls.Default.Attack.performed += PerformAttack;
         abilityManager.controls.Default.Aiming.performed += SetAttackDirection;

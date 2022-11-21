@@ -1,20 +1,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
-public enum PlayerAbilitys
-{
-    Move,
-    Dodge,
-    ShootAttack,
-    SwordAttack,
-}
+using System;
 
 public class PlayerAbilityManager : MonoBehaviour
 {
-    public List<PlayerAbilitys> accesableAbilitys = new();
-    private readonly Dictionary<PlayerAbilitys, BasePlayerAbility> playerAbilitysDictionary = new();
-    public PlayerAbilitys activeAttackAbility;
+    [Header("Ability Collections")]
+    public List<Type> accesableAbilitys = new() { typeof(MoveAbility), typeof(DodgeAbility), typeof(ShootAttackAbility) };
+    public BaseAttackAbility activeAttackAbility;
+
+    [Header("Abilty References")]
+    public Rigidbody2D rb;
+    public SpriteRenderer spriteHolder;
+
+    private readonly Dictionary<Type, BasePlayerAbility> playerAbilitysDictionary = new();
 
     [HideInInspector] public Controls controls;
     [HideInInspector] public bool usingGamepad = false;
@@ -45,47 +44,49 @@ public class PlayerAbilityManager : MonoBehaviour
 
     private void SetUpAbilityDictionary()
     {
-        playerAbilitysDictionary.Add(PlayerAbilitys.Move, GetComponent<MoveAbility>());
-        playerAbilitysDictionary.Add(PlayerAbilitys.Dodge, GetComponent<DodgeAbility>());
-        playerAbilitysDictionary.Add(PlayerAbilitys.ShootAttack, GetComponent<ShootAttackAbility>());
-        playerAbilitysDictionary.Add(PlayerAbilitys.SwordAttack, GetComponent<SwordAttackAbility>());
+        foreach (var ability in GetComponents<BasePlayerAbility>())
+        {
+            playerAbilitysDictionary.Add(ability.GetType(), ability);
+        }
     }
 
-    public void SetAttackAbility(PlayerAbilitys attackAbility)
+    public void SetAttackAbility(Type attackAbilityType)
     {
-        if (attackAbility != activeAttackAbility)
-        {
-            playerAbilitysDictionary[activeAttackAbility].Unset();
-            playerAbilitysDictionary[activeAttackAbility].enabled = false;
+        if (!accesableAbilitys.Contains(attackAbilityType)) { return; }
+        if (attackAbilityType == activeAttackAbility.GetType()) { return; }
 
-            playerAbilitysDictionary[attackAbility].enabled = true;
-            playerAbilitysDictionary[attackAbility].Setup();
-        }
+        UnsetActiveAttackAbility();
+            
+        playerAbilitysDictionary[attackAbilityType].enabled = true;
+        playerAbilitysDictionary[attackAbilityType].Setup();
     }
 
     public void UnsetActiveAttackAbility()
     {
-        playerAbilitysDictionary[activeAttackAbility].Unset();
-        playerAbilitysDictionary[activeAttackAbility].enabled = false;
-    }
-
-    public void GiveAbility(PlayerAbilitys ability)
-    {
-        if (!accesableAbilitys.Contains(ability))
+        if (activeAttackAbility != null)
         {
-            accesableAbilitys.Add(ability);
-            playerAbilitysDictionary[ability].enabled = true;
-            playerAbilitysDictionary[ability].Setup();
+            activeAttackAbility.Unset();
+            activeAttackAbility.enabled = false;
         }
     }
 
-    public void RemoveAbility(PlayerAbilitys ability)
+    public void GiveAbility(Type abilityType)
     {
-        if (accesableAbilitys.Contains(ability))
+        if (!accesableAbilitys.Contains(abilityType))
         {
-            accesableAbilitys.Remove(ability);
-            playerAbilitysDictionary[ability].Unset();
-            playerAbilitysDictionary[ability].enabled = false;
+            accesableAbilitys.Add(abilityType);
+            playerAbilitysDictionary[abilityType].enabled = true;
+            playerAbilitysDictionary[abilityType].Setup();
+        }
+    }
+
+    public void RemoveAbility(Type abilityType)
+    {
+        if (accesableAbilitys.Contains(abilityType))
+        {
+            accesableAbilitys.Remove(abilityType);
+            playerAbilitysDictionary[abilityType].Unset();
+            playerAbilitysDictionary[abilityType].enabled = false;
         }
     }
 }

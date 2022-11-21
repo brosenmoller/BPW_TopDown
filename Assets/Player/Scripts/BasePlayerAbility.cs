@@ -2,35 +2,31 @@ using UnityEngine;
 
 public abstract class BasePlayerAbility : MonoBehaviour
 {
-    [HideInInspector] public PlayerAbilitys abilityType;
-
     protected Rigidbody2D rb;
-    protected Animator anim;
+    //protected Animator anim;
     protected SpriteRenderer spriteHolder;
     protected PlayerAbilityManager abilityManager;
 
-    private void Awake()
-    {
-        SetAbilityType();
-    }
-
-    protected virtual void Start()
+    private void Start()
     {
         abilityManager = GetComponent<PlayerAbilityManager>();
-        if (!abilityManager.accesableAbilitys.Contains(abilityType))
+        if (!abilityManager.accesableAbilitys.Contains(GetType()))
         {
             enabled = false;
             return;
         }
-        
+
         Setup();
 
-        rb = GetComponent<Rigidbody2D>();
+        rb = abilityManager.rb;
         //anim = GetComponent<Animator>();
-        spriteHolder = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        spriteHolder = abilityManager.spriteHolder;
+
+        Initialize();
     }
 
-    protected abstract void SetAbilityType();
+    protected virtual void Initialize() { }
+
     public abstract void Setup();
     public abstract void Unset();
 }
