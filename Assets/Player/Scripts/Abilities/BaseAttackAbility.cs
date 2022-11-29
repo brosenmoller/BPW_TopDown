@@ -4,7 +4,12 @@ using UnityEngine.InputSystem;
 public abstract class BaseAttackAbility : BasePlayerAbility
 {
     [Header("Base Attack Settings")]
-    [SerializeField] private Transform weaponHolder;
+    [SerializeField] protected Transform weaponHolder;
+    [SerializeField] private float cooldown;
+    [SerializeField] protected int damage;
+    [SerializeField] protected float force;
+
+    private float cooldownTimer = 0;
 
     private Camera mainCamera;
 
@@ -26,17 +31,27 @@ public abstract class BaseAttackAbility : BasePlayerAbility
     {
         mainCamera = Camera.main;
 
-        abilityManager.controls.Default.Attack.performed += PerformAttack;
+        abilityManager.controls.Default.Attack.performed += CheckForAttack;
         abilityManager.controls.Default.Aiming.performed += SetAttackDirection;
     }
 
     public override void Unset()
     {
-        abilityManager.controls.Default.Attack.performed -= PerformAttack;
+        abilityManager.controls.Default.Attack.performed -= CheckForAttack;
         abilityManager.controls.Default.Aiming.performed -= SetAttackDirection;
     }
 
-    protected abstract void PerformAttack(InputAction.CallbackContext context);
+    private void CheckForAttack(InputAction.CallbackContext context)
+    {
+        if (attackDirection == null || attackDirection == Vector2.zero) { return; }
+
+        if (Time.time < cooldownTimer) { return; }
+        cooldownTimer = Time.time + cooldown;
+
+        PerformAttack();
+    }
+
+    protected abstract void PerformAttack();
 
     private void FixedUpdate()
     {
@@ -66,7 +81,7 @@ public abstract class BaseAttackAbility : BasePlayerAbility
         {
             if (vector2Input != Vector2.zero) 
             {
-                attackDirection = vector2Input; 
+                attackDirection = vector2Input.normalized; 
             }
         }
         else

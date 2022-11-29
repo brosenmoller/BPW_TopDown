@@ -44,7 +44,7 @@ public class PlayerAbilityManager : MonoBehaviour
 
     private void SetUpAbilityDictionary()
     {
-        foreach (var ability in GetComponents<BasePlayerAbility>())
+        foreach (BasePlayerAbility ability in GetComponents<BasePlayerAbility>())
         {
             playerAbilitysDictionary.Add(ability.GetType(), ability);
         }

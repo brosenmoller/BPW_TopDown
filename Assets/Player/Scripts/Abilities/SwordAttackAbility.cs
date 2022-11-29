@@ -1,21 +1,26 @@
 ﻿using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class SwordAttackAbility : BaseAttackAbility
 {
     [Header("Movement Settings")]
-    [SerializeField] private float cooldown;
+    [SerializeField] private Vector2 hitSize;
 
-    private float cooldownTimer = 0;
-
-    protected override void PerformAttack(InputAction.CallbackContext context)
+    protected override void PerformAttack()
     {
-        if (attackDirection == null || attackDirection == Vector2.zero) { return; }
-        
-        if (Time.time < cooldownTimer) { return; }
-        cooldownTimer = Time.time + cooldown;
+        Collider2D[] colliders = Physics2D.OverlapBoxAll(weaponHolder.transform.GetChild(0).position, hitSize, 0);
+        foreach (Collider2D collider in colliders)
+        {
+            collider.TryGetComponent(out IAttackInteractable attackInteractable);
+            attackInteractable?.Interaction(attackDirection, damage, force);
 
-        Debug.Log("PerformSwordAttack");
+            // Own Knockback
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(weaponHolder.transform.GetChild(0).position, hitSize);
     }
 }
 

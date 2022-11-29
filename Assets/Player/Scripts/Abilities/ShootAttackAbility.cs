@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class ShootAttackAbility : BaseAttackAbility
 {
@@ -7,10 +6,8 @@ public class ShootAttackAbility : BaseAttackAbility
     [SerializeField] private float bulletSpeed;
     [SerializeField] private GameObject bullet;
 
-    protected override void PerformAttack(InputAction.CallbackContext context)
+    protected override void PerformAttack()
     {
-        if (attackDirection == null || attackDirection == Vector2.zero) { return; }
-
         GameObject newBullet = Instantiate(bullet, transform.position, Quaternion.identity);
         newBullet.GetComponent<Rigidbody2D>().velocity = attackDirection * bulletSpeed;
     }

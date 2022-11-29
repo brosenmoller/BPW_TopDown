@@ -1,8 +1,10 @@
-﻿public abstract class State
-{
-    protected StateMachine stateOwner;
+﻿using UnityEngine;
 
-    public void Setup(StateMachine stateMachine)
+public abstract class State<T> where T : MonoBehaviour
+{
+    protected StateMachine<T> stateOwner;
+
+    public void Setup(StateMachine<T> stateMachine)
     {
         stateOwner = stateMachine;
     }
