@@ -2,10 +2,12 @@ using UnityEngine;
 
 public abstract class BasePlayerAbility : MonoBehaviour
 {
-    protected Rigidbody2D rb;
-    //protected Animator anim;
+    protected Rigidbody2D rigidBody2D;
+    protected Animator animator;
     protected SpriteRenderer spriteHolder;
     protected PlayerAbilityManager abilityManager;
+
+    public bool isMovementAbility;
 
     private void Start()
     {
@@ -18,8 +20,8 @@ public abstract class BasePlayerAbility : MonoBehaviour
         
         Setup();
 
-        rb = abilityManager.rb;
-        //anim = GetComponent<Animator>();
+        rigidBody2D = abilityManager.rigidBody2D;
+        animator = abilityManager.animator;
         spriteHolder = abilityManager.spriteHolder;
     }
 

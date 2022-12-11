@@ -10,7 +10,7 @@ public class StateMachine<T> where T : MonoBehaviour
     
     public T Controller { get; private set; }
 
-    public StateMachine(State<T> initialState, T owner, params State<T>[] states)
+    public StateMachine(T owner, State<T> initialState, State<T>[] states)
     {
         Controller = owner;
 
@@ -20,7 +20,7 @@ public class StateMachine<T> where T : MonoBehaviour
             state.Setup(this);
         }
 
-        if (stateDictionary.ContainsValue(currentState)) { currentState = initialState; }
+        if (stateDictionary.ContainsValue(initialState)) { currentState = initialState; }
         else { currentState = stateDictionary.Values.First(); }
     }
 
@@ -33,7 +33,7 @@ public class StateMachine<T> where T : MonoBehaviour
         }
 
         currentState?.OnExit();
-        
+
         currentState = stateDictionary[newStateType];
         currentState.OnEnter();
     }

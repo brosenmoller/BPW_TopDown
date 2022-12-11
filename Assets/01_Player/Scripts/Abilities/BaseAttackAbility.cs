@@ -32,7 +32,7 @@ public abstract class BaseAttackAbility : BasePlayerAbility
     public override void Setup()
     {
         mainCamera = Camera.main;
-        weaponAnimator = GetComponentInChildren<Animator>();
+        weaponAnimator = weaponHolder.GetComponentInChildren<Animator>();
         weaponAnimator.runtimeAnimatorController = weaponAnimatorController;
 
         abilityManager.controls.Default.Attack.performed += CheckForAttack;

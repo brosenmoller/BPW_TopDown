@@ -10,8 +10,9 @@ public class PlayerAbilityManager : MonoBehaviour
     public BaseAttackAbility activeAttackAbility;
 
     [Header("Abilty References")]
-    public Rigidbody2D rb;
+    public Rigidbody2D rigidBody2D;
     public SpriteRenderer spriteHolder;
+    public Animator animator;
 
     private readonly Dictionary<Type, BasePlayerAbility> playerAbilitysDictionary = new();
 
@@ -87,6 +88,34 @@ public class PlayerAbilityManager : MonoBehaviour
             accesableAbilitys.Remove(abilityType);
             playerAbilitysDictionary[abilityType].Unset();
             playerAbilitysDictionary[abilityType].enabled = false;
+        }
+    }
+
+    public void DeactivateAllMovementAbilities()
+    {
+        foreach (Type abilityType in accesableAbilitys)
+        {
+            BasePlayerAbility ability = playerAbilitysDictionary[abilityType];
+
+            if (ability.isMovementAbility)
+            {
+                ability.Unset();
+                ability.enabled = false;
+            }
+        }
+    }
+
+    public void ReactivateAllMovementAbilities()
+    {
+        foreach (Type abilityType in accesableAbilitys)
+        {
+            BasePlayerAbility ability = playerAbilitysDictionary[abilityType];
+
+            if (ability.isMovementAbility)
+            {
+                ability.Setup();
+                ability.enabled = true;
+            }
         }
     }
 }

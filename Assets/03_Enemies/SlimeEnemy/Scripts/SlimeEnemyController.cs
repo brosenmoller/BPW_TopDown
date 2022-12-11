@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class TestEnemy : MonoBehaviour, IAttackInteractable
+public class SlimeEnemyController : MonoBehaviour, IAttackInteractable
 {
     [Header("Movement Settings")]
     [SerializeField] private Transform target;
@@ -27,6 +27,8 @@ public class TestEnemy : MonoBehaviour, IAttackInteractable
 
     private int health;
 
+    private StateMachine<SlimeEnemyController> stateMachine;
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -39,12 +41,12 @@ public class TestEnemy : MonoBehaviour, IAttackInteractable
         normalMat = spriteHolder.material;
 
         health = startHealth;
-        
     }
 
     private void Start()
     {
-        StartCoroutine(UpdatePlayerTracker());
+        State<SlimeEnemyController>[] states = new[] { new SlimeEnemyWanderState() };
+        stateMachine = new StateMachine<SlimeEnemyController>(this, states[0], states);
     }
 
     private IEnumerator UpdatePlayerTracker()
@@ -58,6 +60,29 @@ public class TestEnemy : MonoBehaviour, IAttackInteractable
             yield return new WaitForSeconds(updateDelay);
         }
     }
+
+    public void SetActiveAgent(bool activation)
+    {
+        agent.isStopped = activation;
+    }
+
+    public bool SetAgentDestination(Vector2 target)
+    {
+        NavMeshPath path = new();
+
+        if (agent.CalculatePath(target, path) && path.status == NavMeshPathStatus.PathComplete)
+        {
+            agent.SetPath(path);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    
+
     public void OnAttackInteract(Vector2 direction, int damage, float force)
     {
         health -= damage;
@@ -68,7 +93,7 @@ public class TestEnemy : MonoBehaviour, IAttackInteractable
 
         rigidBody.AddForce(force * getHitKnockbackMultiplier * direction, ForceMode2D.Impulse);
         spriteHolder.material = hitFlashMat;
-        
+
         Invoke(nameof(SetNormalMaterial), .1f);
         Invoke(nameof(StunReset), stunTime);
     }

@@ -1,5 +1,4 @@
-﻿
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -24,10 +23,8 @@ public class DodgeAbility : BasePlayerAbility
 
     public void StartDodge(InputAction.CallbackContext context)
     {
-        if (!canDodge || rb.velocity == Vector2.zero) { return; }
+        if (!canDodge || rigidBody2D.velocity == Vector2.zero) { return; }
 
-        //anim.SetTrigger("Dash");
-        //AudioManager.Instance.Play("Dash");
         StartCoroutine(Dodging());
     }
 
@@ -38,15 +35,20 @@ public class DodgeAbility : BasePlayerAbility
 
         Time.timeScale = .9f;
 
-        Vector2 previousVelocity = rb.velocity;
-        rb.velocity *= speedMultiplier;
+        Vector2 previousVelocity = rigidBody2D.velocity;
+        rigidBody2D.velocity *= speedMultiplier;
+
+        animator.SetBool("IsDashing", true);
+        //AudioManager.Instance.Play("Dash");
 
         yield return new WaitForSeconds(duration);
 
         Time.timeScale = 1f;
 
         abilityManager.GiveAbility(typeof(MoveAbility));
-        rb.velocity = previousVelocity;
+        rigidBody2D.velocity = previousVelocity;
+
+        animator.SetBool("IsDashing", false);
 
         yield return new WaitForSeconds(cooldown);
 
