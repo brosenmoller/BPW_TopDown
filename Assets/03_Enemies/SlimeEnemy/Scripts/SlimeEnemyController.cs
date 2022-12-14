@@ -76,9 +76,6 @@ public class SlimeEnemyController : MonoBehaviour, IAttackInteractable
             detectionRange
         );
 
-        Debug.Log(hit2D.collider == null);
-        Debug.DrawRay(transform.position, (target.position - transform.position).normalized * detectionRange, Color.yellow);
-
         if (hit2D.collider == null) { return false; }
 
         hit2D.collider.gameObject.TryGetComponent(out PlayerAbilityManager playerAbilityManager);

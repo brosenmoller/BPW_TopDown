@@ -3,24 +3,19 @@ using UnityEngine;
 
 public class SlimeEnemyChaseState : State<SlimeEnemyController>
 {
+    private float timer = 0f;
+
     public override void OnEnter()
     {
         stateOwner.Controller.SetAgentDisabled(false);
-        stateOwner.Controller.StartCoroutine(UpdatePlayerTracker());
     }
 
-    public override void OnExit()
+    public override void OnUpdate()
     {
-        stateOwner.Controller.StopCoroutine(UpdatePlayerTracker());
-    }
+        if (Time.time < timer) { return; }
 
-    private IEnumerator UpdatePlayerTracker()
-    {
-        while (true)
-        {
-            stateOwner.Controller.SetAgentDestination(stateOwner.Controller.target.position);
-            
-            yield return new WaitForSeconds(stateOwner.Controller.updateDelay);
-        }
+        timer = Time.time + stateOwner.Controller.updateDelay;
+
+        stateOwner.Controller.SetAgentDestination(stateOwner.Controller.target.position);
     }
 }

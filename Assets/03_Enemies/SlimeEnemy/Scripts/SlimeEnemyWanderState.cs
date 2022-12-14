@@ -3,35 +3,25 @@ using UnityEngine;
 
 public class SlimeEnemyWanderState : State<SlimeEnemyController>
 {
+    private Vector2 newPosition;
+    private float timer = 0f;
+
     public override void OnEnter()
     {
         stateOwner.Controller.SetAgentDisabled(false);
-        stateOwner.Controller.StartCoroutine(Wandering());
     }
 
-    public override void OnExit()
+    public override void OnUpdate()
     {
-        stateOwner.Controller.StopCoroutine(Wandering());
-    }
-
-    private IEnumerator Wandering()
-    {
-        Vector2 newPosition = GetRandomPosition();
-
-        while (true)
+        if (Time.time < timer) { return; }
+        
+        timer = Time.time + Random.Range(stateOwner.Controller.wanderDelay.x, stateOwner.Controller.wanderDelay.y);
+        
+        do
         {
-
-            yield return new WaitForSeconds(
-                Random.Range(stateOwner.Controller.wanderDelay.x, stateOwner.Controller.wanderDelay.y)
-            );
-
-            do
-            {
-                newPosition = GetRandomPosition();
-                yield return null;
-            }
-            while (!stateOwner.Controller.SetAgentDestination(newPosition));
+            newPosition = GetRandomPosition();
         }
+        while (!stateOwner.Controller.SetAgentDestination(newPosition));
     }
 
     private Vector2 GetRandomPosition()

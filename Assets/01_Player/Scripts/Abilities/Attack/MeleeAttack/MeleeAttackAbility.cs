@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SwordAttackAbility : BaseAttackAbility
+public class MeleeAttackAbility : BaseAttackAbility
 {
     [Header("Movement Settings")]
     [SerializeField] private float hitRadius;

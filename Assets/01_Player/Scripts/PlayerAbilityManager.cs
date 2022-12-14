@@ -6,7 +6,7 @@ using System;
 public class PlayerAbilityManager : MonoBehaviour
 {
     [Header("Ability Collections")]
-    public List<Type> accesableAbilitys = new() { typeof(MoveAbility), typeof(DodgeAbility), typeof(ShootAttackAbility), typeof(SwordAttackAbility) };
+    public List<Type> accesableAbilitys = new() { typeof(MoveAbility), typeof(DodgeAbility), typeof(ShootAttackAbility), typeof(MeleeAttackAbility) };
     public BaseAttackAbility activeAttackAbility;
 
     [Header("Abilty References")]
@@ -31,10 +31,18 @@ public class PlayerAbilityManager : MonoBehaviour
     {
         controls ??= new Controls();
         controls.Default.Enable();
+
+        controls.Default.SwitchAttack.performed += SwitchAttack;
+    }
+
+    private void SwitchAttack(InputAction.CallbackContext context)
+    {
+        if ()
     }
 
     private void OnDisable()
     {
+        controls.Default.SwitchAttack.performed -= SwitchAttack;
         controls.Default.Disable();
     }
 
