@@ -22,13 +22,6 @@ public class SwordAttackAbility : BaseAttackAbility
         return transform.position + directionVector;
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-
-        Gizmos.DrawWireSphere(GetCircleOrigin(), hitRadius);
-    }
-
     private IEnumerator CheckForAttackInteractableInRange()
     {
         Collider2D[] colliders;
@@ -57,6 +50,12 @@ public class SwordAttackAbility : BaseAttackAbility
 
             yield return null;
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(GetCircleOrigin(), hitRadius);
     }
 }
 

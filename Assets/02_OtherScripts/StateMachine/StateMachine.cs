@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class StateMachine<T> where T : MonoBehaviour
 {
     public Dictionary<Type, State<T>> stateDictionary = new();
+    private List<Transition> allTransitions = new();
+    private List<Transition> activeTransitions = new();
     public State<T> currentState;
     
     public T Controller { get; private set; }
 
-    public StateMachine(T owner, State<T> initialState, State<T>[] states)
+    public StateMachine(T owner, params State<T>[] states)
     {
         Controller = owner;
 
@@ -19,9 +20,6 @@ public class StateMachine<T> where T : MonoBehaviour
             stateDictionary.Add(state.GetType(), state);
             state.Setup(this);
         }
-
-        if (stateDictionary.ContainsValue(initialState)) { currentState = initialState; }
-        else { currentState = stateDictionary.Values.First(); }
     }
 
     public void ChangeState(Type newStateType)
@@ -35,17 +33,28 @@ public class StateMachine<T> where T : MonoBehaviour
         currentState?.OnExit();
 
         currentState = stateDictionary[newStateType];
+        activeTransitions = allTransitions.FindAll(
+            currentTransition => currentTransition.fromState == currentState.GetType() || currentTransition.fromState == null
+        );
         currentState.OnEnter();
-    }
-
-    public void OnUpdate()
-    {
-        currentState.OnUpdate();
     }
 
     public void OnFixedUpdate()
     {
-        currentState.OnFixedUpdate();
+        foreach (Transition transition in activeTransitions)
+        {
+            if (transition.Evalutate())
+            {
+                ChangeState(transition.toState);
+                return;
+            }
+        }
+        currentState.OnUpdate();
+    }
+
+    public void AddTransition(Transition transition)
+    {
+        allTransitions.Add(transition);
     }
 }
 

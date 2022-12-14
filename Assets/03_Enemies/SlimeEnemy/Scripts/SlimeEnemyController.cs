@@ -1,13 +1,15 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class SlimeEnemyController : MonoBehaviour, IAttackInteractable
 {
     [Header("Movement Settings")]
-    [SerializeField] private Transform target;
+    public Transform target;
     [SerializeField] private float speed;
-    [SerializeField] private float updateDelay;
+    public float updateDelay;
+    public float wanderDistance;
+    public Vector2 wanderDelay;
+    public float detectionRange;
 
     [Header("Combat")]
     [SerializeField] private int startHealth;
@@ -45,23 +47,47 @@ public class SlimeEnemyController : MonoBehaviour, IAttackInteractable
 
     private void Start()
     {
-        State<SlimeEnemyController>[] states = new[] { new SlimeEnemyWanderState() };
-        stateMachine = new StateMachine<SlimeEnemyController>(this, states[0], states);
+        SetupStateMachine();
     }
 
-    private IEnumerator UpdatePlayerTracker()
+    private void SetupStateMachine()
     {
-        while (true)
-        {
-            if (!agent.isStopped)
-            {
-                agent.SetDestination(target.position);
-            }
-            yield return new WaitForSeconds(updateDelay);
-        }
+        State<SlimeEnemyController>[] states = new State<SlimeEnemyController>[] {
+            new SlimeEnemyWanderState(),
+            new SlimeEnemyChaseState(),
+        };
+
+        stateMachine = new StateMachine<SlimeEnemyController>(this, states);
+        stateMachine.AddTransition(new Transition(typeof(SlimeEnemyWanderState), typeof(SlimeEnemyChaseState), IsPlayerInRange));
+        stateMachine.AddTransition(new Transition(typeof(SlimeEnemyChaseState), typeof(SlimeEnemyWanderState), () => !IsPlayerInRange()));
+        stateMachine.ChangeState(typeof(SlimeEnemyWanderState));
     }
 
-    public void SetActiveAgent(bool activation)
+    private void FixedUpdate()
+    {
+        stateMachine.OnFixedUpdate();
+    }
+
+    private bool IsPlayerInRange()
+    {
+        RaycastHit2D hit2D = Physics2D.Raycast(
+            transform.position,
+            (target.position - transform.position).normalized,
+            detectionRange
+        );
+
+        Debug.Log(hit2D.collider == null);
+        Debug.DrawRay(transform.position, (target.position - transform.position).normalized * detectionRange, Color.yellow);
+
+        if (hit2D.collider == null) { return false; }
+
+        hit2D.collider.gameObject.TryGetComponent(out PlayerAbilityManager playerAbilityManager);
+        if (playerAbilityManager == null) { return false; }
+
+        return true;
+    }
+
+    public void SetAgentDisabled(bool activation)
     {
         agent.isStopped = activation;
     }
@@ -81,13 +107,11 @@ public class SlimeEnemyController : MonoBehaviour, IAttackInteractable
         }
     }
 
-    
-
     public void OnAttackInteract(Vector2 direction, int damage, float force)
     {
         health -= damage;
 
-        //AudioManager.Instance.Play("FungusHit");
+        //AudioManager.Instance.Play("hit");
 
         agent.isStopped = true;
 

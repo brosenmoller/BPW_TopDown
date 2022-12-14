@@ -47,3 +47,6 @@ TagManager:
   - name: Forground
     uniqueID: 4231623183
     locked: 0
+  - name: Roof
+    uniqueID: 4282637041
+    locked: 0
