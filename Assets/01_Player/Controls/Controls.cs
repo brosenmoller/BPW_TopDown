@@ -209,7 +209,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Q and E"",
                     ""id"": ""bb3a2586-5dfd-499b-a79b-e280b45e8701"",
-                    ""path"": ""1DAxis"",
+                    ""path"": ""1DAxis(minValue=0,whichSideWins=2)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -242,7 +242,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Bumpers"",
                     ""id"": ""cb3ae950-182f-4f3c-9f62-a7e8b51802b2"",
-                    ""path"": ""1DAxis"",
+                    ""path"": ""1DAxis(minValue=0,whichSideWins=2)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

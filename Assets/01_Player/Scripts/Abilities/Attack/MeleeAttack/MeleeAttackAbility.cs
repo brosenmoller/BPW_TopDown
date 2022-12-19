@@ -10,6 +10,8 @@ public class MeleeAttackAbility : BaseAttackAbility
     [SerializeField] private float attackDuration;
     [SerializeField] protected LayerMask attackLayerMask;
 
+    public MeleeAttackItem meleeAttackItem;
+
     protected override void PerformAttack()
     {
         StartCoroutine(CheckForAttackInteractableInRange());

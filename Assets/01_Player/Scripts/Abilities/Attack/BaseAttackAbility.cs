@@ -13,6 +13,8 @@ public abstract class BaseAttackAbility : BasePlayerAbility
     [Header("Base Attack Looks")]
     [SerializeField] protected AnimatorController weaponAnimatorController;
 
+    public BaseAttackItem attackItem;
+
     private float cooldownTimer = 0;
 
     private Camera mainCamera;

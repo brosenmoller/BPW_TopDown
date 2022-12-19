@@ -31,13 +31,19 @@ public class PlayerAbilityManager : MonoBehaviour
     {
         controls ??= new Controls();
         controls.Default.Enable();
-
         controls.Default.SwitchAttack.performed += SwitchAttack;
     }
 
     private void SwitchAttack(InputAction.CallbackContext context)
     {
-        if ()
+        if (context.ReadValue<float>() == 0)
+        {
+            SetAttackAbility(typeof(MeleeAttackAbility));
+        }
+        else if (context.ReadValue<float>() == 1)
+        {
+            SetAttackAbility(typeof(ShootAttackAbility));
+        }
     }
 
     private void OnDisable()
