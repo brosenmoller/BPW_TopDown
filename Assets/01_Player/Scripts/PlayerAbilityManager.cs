@@ -5,15 +5,12 @@ using System;
 
 public class PlayerAbilityManager : MonoBehaviour
 {
-    [Header("Ability Collections")]
-    public List<Type> accesableAbilitys = new() { typeof(MoveAbility), typeof(DodgeAbility), typeof(ShootAttackAbility), typeof(MeleeAttackAbility) };
-    public BaseAttackAbility activeAttackAbility;
-
     [Header("Abilty References")]
     public Rigidbody2D rigidBody2D;
     public SpriteRenderer spriteHolder;
     public Animator animator;
 
+    public List<Type> accesableAbilitys = new() { typeof(MoveAbility), typeof(DodgeAbility) };
     private readonly Dictionary<Type, BasePlayerAbility> playerAbilitysDictionary = new();
 
     [HideInInspector] public Controls controls;
@@ -31,24 +28,10 @@ public class PlayerAbilityManager : MonoBehaviour
     {
         controls ??= new Controls();
         controls.Default.Enable();
-        controls.Default.SwitchAttack.performed += SwitchAttack;
-    }
-
-    private void SwitchAttack(InputAction.CallbackContext context)
-    {
-        if (context.ReadValue<float>() == 0)
-        {
-            SetAttackAbility(typeof(MeleeAttackAbility));
-        }
-        else if (context.ReadValue<float>() == 1)
-        {
-            SetAttackAbility(typeof(ShootAttackAbility));
-        }
     }
 
     private void OnDisable()
     {
-        controls.Default.SwitchAttack.performed -= SwitchAttack;
         controls.Default.Disable();
     }
 
@@ -62,26 +45,6 @@ public class PlayerAbilityManager : MonoBehaviour
         foreach (BasePlayerAbility ability in GetComponents<BasePlayerAbility>())
         {
             playerAbilitysDictionary.Add(ability.GetType(), ability);
-        }
-    }
-
-    public void SetAttackAbility(Type attackAbilityType)
-    {
-        if (!accesableAbilitys.Contains(attackAbilityType)) { return; }
-        if (attackAbilityType == activeAttackAbility.GetType()) { return; }
-
-        UnsetActiveAttackAbility();
-
-        playerAbilitysDictionary[attackAbilityType].enabled = true;
-        playerAbilitysDictionary[attackAbilityType].Setup();
-    }
-
-    public void UnsetActiveAttackAbility()
-    {
-        if (activeAttackAbility != null)
-        {
-            activeAttackAbility.Unset();
-            activeAttackAbility.enabled = false;
         }
     }
 

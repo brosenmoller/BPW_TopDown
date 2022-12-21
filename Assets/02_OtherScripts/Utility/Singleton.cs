@@ -15,7 +15,6 @@ public abstract class Singleton<T> : MonoBehaviour where T : Singleton<T>
             }
 
             return instance;
-            
         }
     }
 

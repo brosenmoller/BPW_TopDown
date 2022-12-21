@@ -1,19 +1,16 @@
-﻿// Orginal Code by Dapper Dino : https://www.youtube.com/watch?v=f5GvfZfy3yk&t=487s
+﻿// Adapted from Tutorial by Dapper Dino : https://www.youtube.com/watch?v=f5GvfZfy3yk&t=487s
 
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
+using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-public class SaveManager : MonoBehaviour
+public class SaveManager : Singleton<SaveManager>
 {
-    public static SaveManager Instance;
-
-    private void Awake()
+    protected override void SingletonAwake()
     {
-        if (Instance == null) Instance = this;
-        else if (Instance != this) Destroy(gameObject);
         Load();
     }
 
@@ -54,16 +51,16 @@ public class SaveManager : MonoBehaviour
 
         using (FileStream stream = File.Open(SavePath, FileMode.Open))
         {
-            var formatter = GetBinaryFormatter();
+            BinaryFormatter formatter = GetBinaryFormatter();
             return (Dictionary<string, object>)formatter.Deserialize(stream);
         }
     }
 
     private void SaveFile(object state)
     {
-        using (var stream = File.Open(SavePath, FileMode.Create))
+        using (FileStream stream = File.Open(SavePath, FileMode.Create))
         {
-            var formatter = GetBinaryFormatter();
+            BinaryFormatter formatter = GetBinaryFormatter();
             formatter.Serialize(stream, state);
         }
     }
@@ -78,7 +75,7 @@ public class SaveManager : MonoBehaviour
 
     private void RestoreState(Dictionary<string, object> state)
     {
-        foreach (var saveable in FindObjectsOfType<SaveableEntity>())
+        foreach (SaveableEntity saveable in FindObjectsOfType<SaveableEntity>())
         {
             if (state.TryGetValue(saveable.Id, out object value))
             {
@@ -93,11 +90,13 @@ public class SaveManager : MonoBehaviour
 
         SurrogateSelector selector = new();
 
-        Vector3SerializationSurrogate vector3Surrogate = new Vector3SerializationSurrogate();
-        QuaterionSerializationSurrogate quaterionSurrogate = new QuaterionSerializationSurrogate();
+        Vector3SerializationSurrogate vector3Surrogate = new();
+        QuaterionSerializationSurrogate quaterionSurrogate = new();
+        TypeSerializationSurrogate typeSurrogate = new();
 
         selector.AddSurrogate(typeof(Vector3), new StreamingContext(StreamingContextStates.All), vector3Surrogate);
         selector.AddSurrogate(typeof(Quaternion), new StreamingContext(StreamingContextStates.All), quaterionSurrogate);
+        selector.AddSurrogate(typeof(Type), new StreamingContext(StreamingContextStates.All), typeSurrogate);
 
         formatter.SurrogateSelector = selector;
 
