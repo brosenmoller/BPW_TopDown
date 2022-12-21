@@ -3,10 +3,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewShootAttackItem", menuName = "AttackItems/ShootAttack", order = 1)]
 public class ShootAttackItem : BaseAttackItem
 {
-    [Header("Shoot Settings")]
+    [Header("Shoot Data")]
     [SerializeField] private float cooldownTime;
     [SerializeField] private float bulletSpeed;
     [SerializeField] private GameObject bullet;
+    [SerializeField] private GameObject shootParticles;
 
     private Timer cooldownTimer;
     private bool canShoot;
@@ -32,9 +33,16 @@ public class ShootAttackItem : BaseAttackItem
         if (!canShoot) { return; }
 
         attackManager.weaponAnimator.SetTrigger("AttackTrigger");
+        attackSound.Play();
 
         GameObject newBullet = Instantiate(bullet, attackManager.weaponAnimator.transform.position, Quaternion.identity);
         newBullet.GetComponent<AttackProjectile>().Setup(bulletSpeed, attackManager.attackDirection, damage, force);
+
+        Instantiate(
+            shootParticles, 
+            attackManager.weaponAnimator.transform.position + (Vector3)attackManager.attackDirection, 
+            attackManager.weaponHolder.rotation
+        );
 
         canShoot = false;
         cooldownTimer.Reset();

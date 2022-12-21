@@ -149,6 +149,7 @@ MonoBehaviour:
   damage: 3
   force: 6
   hitFlashMat: {fileID: 2100000, guid: 6a5f43d3f6eec9b4ca953f0c0feed7dc, type: 2}
+  hitAudio: {fileID: 11400000, guid: 8595ef3f26a9b0b498823385bf78e937, type: 2}
 --- !u!195 &6650040087545071917
 NavMeshAgent:
   m_ObjectHideFlags: 0

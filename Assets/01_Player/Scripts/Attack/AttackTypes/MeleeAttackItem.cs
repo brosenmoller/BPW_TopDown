@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewMeleeAttackItem", menuName = "AttackItems/MeleeAttack", order = 0)]
 public class MeleeAttackItem : BaseAttackItem
 {
-    [Header("Melee Settings")]
+    [Header("Melee Data")]
     [SerializeField] private float cooldownTime;
     [SerializeField] private float hitRadius;
     [SerializeField] private float hitOffset;
@@ -25,6 +25,7 @@ public class MeleeAttackItem : BaseAttackItem
         if (!canAttack) { return; }
 
         attackManager.weaponAnimator.SetTrigger("AttackTrigger");
+        attackSound.Play();
 
         attackManager.StartCoroutine(CheckForAttackInteractableInRange());
 

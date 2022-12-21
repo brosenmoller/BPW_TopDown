@@ -2,6 +2,8 @@
 
 public class AttackProjectile : MonoBehaviour
 {
+    [SerializeField] private GameObject particlesOnDestroy;
+
     private Rigidbody2D rigidBody2D;
 
     private Vector2 direction;
@@ -29,5 +31,15 @@ public class AttackProjectile : MonoBehaviour
     {
         collision.TryGetComponent(out IAttackInteractable attackInteractable);
         attackInteractable?.OnAttackInteract(direction, damage, force);
+
+        Destroy(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        if (particlesOnDestroy != null)
+        {
+            Instantiate(particlesOnDestroy, transform.position, Quaternion.identity);
+        }
     }
 }

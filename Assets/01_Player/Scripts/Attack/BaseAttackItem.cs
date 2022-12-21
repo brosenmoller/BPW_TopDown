@@ -3,11 +3,10 @@ using UnityEditor.Animations;
 
 public abstract class BaseAttackItem : ScriptableObject
 {
-    [Header("Base Attack Settings")]
+    [Header("Base Attack Data")]
     [SerializeField] protected int damage;
     [SerializeField] protected float force;
-
-    [Header("Base Attack Looks")]
+    [SerializeField] protected AudioObject attackSound;
     public AnimatorController weaponAnimatorController;
 
     protected PlayerAttackManager attackManager;

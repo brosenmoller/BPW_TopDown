@@ -1,23 +1,61 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Audio;
 
-[System.Serializable]
+[CreateAssetMenu(fileName = "New Audio Object", menuName = "AudioObject")]
 public class AudioObject : ScriptableObject
 {
     public AudioClip clip;
+    public AudioMixerGroup audioMixer;
 
     public bool loop;
     public bool PlayOnAwake;
 
-    [Range(0f, 1f)]
-    public float volume = 1f;
+    [Range(0f, 1f)] public float volume = 1f;
+    [Range(.1f, 3f)] public float pitch = 1f;
 
-    [Range(.1f, 3f)]
-    public float pitch = 1f;
+    private AudioSource source;
+    [HideInInspector] public AudioSource Source { 
+        get
+        {
+            if (source == null) { AddAudioSourceToAudioManager(); }
+            return source;
+        }
+        private set { source = value; }
+    }
 
-    [HideInInspector]
-    public AudioSource source;
+    public bool IsPlaying { get { return Source.isPlaying; } }
 
-    public AudioMixerGroup audioMixer;
-    public bool isMusic;
+    public void Play() => Source.Play();
+    public void Stop() => Source.Stop();    
+    public void Pause() => Source.Pause();
+    public void UnPause() => Source.UnPause();
+
+    public void PlayFadeIn(float fadeDuration, float startVolume = 0f, float targetVolume = 1f)
+    {
+        Source.volume = startVolume;
+        Source.Play();
+        AudioManager.Instance.StartCoroutine(AudioManager.Instance.FadingSound(Source, targetVolume, fadeDuration));
+    }
+
+    public void StopFadeOut(float fadeDuration, float startVolume = 1f, float targetVolume = 0f)
+    {
+        Source.volume = startVolume;
+        AudioManager.Instance.StartCoroutine(
+            AudioManager.Instance.FadingSound(Source, targetVolume, fadeDuration, Stop)
+        );
+    }
+
+    private void AddAudioSourceToAudioManager()
+    {
+        Source = AudioManager.Instance.gameObject.AddComponent<AudioSource>();
+        Source.clip = clip;
+        Source.outputAudioMixerGroup = audioMixer;
+
+        Source.loop = loop;
+        Source.playOnAwake = PlayOnAwake;
+
+        Source.pitch = pitch;
+        Source.volume = volume;
+    }
 }

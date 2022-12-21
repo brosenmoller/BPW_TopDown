@@ -20,6 +20,7 @@ public class SlimeEnemyController : MonoBehaviour, IAttackInteractable
 
     [Header("Effects")]
     [SerializeField] private Material hitFlashMat;
+    [SerializeField] private AudioObject hitAudio;
 
     private Material normalMat;
 
@@ -113,9 +114,12 @@ public class SlimeEnemyController : MonoBehaviour, IAttackInteractable
         agent.isStopped = true;
 
         rigidBody.AddForce(force * getHitKnockbackMultiplier * direction, ForceMode2D.Impulse);
-        spriteHolder.material = hitFlashMat;
+        
+        hitAudio.Play();
 
-        Invoke(nameof(SetNormalMaterial), .1f);
+        spriteHolder.material = hitFlashMat;
+        new Timer(.1f, () => spriteHolder.material = normalMat);
+
         Invoke(nameof(StunReset), stunTime);
     }
 
@@ -124,11 +128,6 @@ public class SlimeEnemyController : MonoBehaviour, IAttackInteractable
     {
         collision.gameObject.TryGetComponent(out PlayerHealthManager player);
         if (player != null) player.TakeDamage((collision.transform.position - transform.position).normalized, damage, force);
-    }
-
-    private void SetNormalMaterial()
-    {
-        spriteHolder.material = normalMat;
     }
 
     private void StunReset()
