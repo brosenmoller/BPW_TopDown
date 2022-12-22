@@ -15,9 +15,9 @@ public class SaveableEntity : MonoBehaviour
 
     public object CaptureState()
     {
-        var state = new Dictionary<string, object>();
+        Dictionary<string, object> state = new();
 
-        foreach (var saveable in GetComponents<ISaveable>())
+        foreach (ISaveable saveable in GetComponents<ISaveable>())
         {
             state[saveable.GetType().ToString()] = saveable.CaptureState();
         }
@@ -27,9 +27,9 @@ public class SaveableEntity : MonoBehaviour
 
     public void RestoreState(object state)
     {
-        var stateDictionary = (Dictionary<string, object>)state;
+        Dictionary<string, object> stateDictionary = (Dictionary<string, object>)state;
 
-        foreach (var saveable in GetComponents<ISaveable>())
+        foreach (ISaveable saveable in GetComponents<ISaveable>())
         {
             string typeName = saveable.GetType().ToString();
 

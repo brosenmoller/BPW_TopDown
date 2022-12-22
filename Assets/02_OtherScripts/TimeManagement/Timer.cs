@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 public class Timer
 {
@@ -20,11 +21,11 @@ public class Timer
         set {
             if (_state != TimerState.Running && value == TimerState.Running)
             {
-                TimerManager.OnTimerUpdate += UpdateTimer;
+                TimerManager.Instance.OnTimerUpdate += UpdateTimer;
             }
             else if (_state == TimerState.Running && value != TimerState.Running)
             {
-                TimerManager.OnTimerUpdate -= UpdateTimer;
+                TimerManager.Instance.OnTimerUpdate -= UpdateTimer;
             }
 
             _state = value; 
@@ -34,14 +35,8 @@ public class Timer
     {
         get { return endTime; }
         set {
-            if (currentTime > value) 
-            {
-                State = TimerState.Finished;
-            }
-            else if (IsFinished && currentTime < value)
-            {
-                State = TimerState.Paused;
-            }
+            if (currentTime > value) { State = TimerState.Finished; }
+            else if (IsFinished && currentTime < value) { State = TimerState.Paused; }
 
             endTime = value;
         }
@@ -71,7 +66,9 @@ public class Timer
         if (currentTime >= endTime)
         {
             State = TimerState.Finished;
-            OnTimerEnd?.Invoke();
+
+            try { OnTimerEnd?.Invoke(); }
+            catch (MissingReferenceException) { }
         }
     }
 

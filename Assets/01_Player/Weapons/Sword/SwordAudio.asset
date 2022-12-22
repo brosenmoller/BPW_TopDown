@@ -16,5 +16,5 @@ MonoBehaviour:
   audioMixer: {fileID: 1819069901340138443, guid: e58f9c3ae1edfb0429898519a44f2564, type: 2}
   loop: 0
   PlayOnAwake: 0
-  volume: 0.62
+  volume: 0.411
   pitch: 1

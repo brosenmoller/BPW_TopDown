@@ -25,8 +25,9 @@ public class SlimeEnemyController : MonoBehaviour, IAttackInteractable
     private Material normalMat;
 
     private NavMeshAgent agent;
-    private Rigidbody2D rigidBody;
+    private Rigidbody2D rigidBody2D;
     private SpriteRenderer spriteHolder;
+    [HideInInspector] public Animator animator;
 
     private int health;
 
@@ -38,7 +39,8 @@ public class SlimeEnemyController : MonoBehaviour, IAttackInteractable
         agent.updateRotation = false;
         agent.updateUpAxis = false;
 
-        rigidBody = GetComponent<Rigidbody2D>();
+        rigidBody2D = GetComponent<Rigidbody2D>();
+        animator= GetComponent<Animator>();
 
         spriteHolder = GetComponent<SpriteRenderer>();
         normalMat = spriteHolder.material;
@@ -113,8 +115,8 @@ public class SlimeEnemyController : MonoBehaviour, IAttackInteractable
 
         agent.isStopped = true;
 
-        rigidBody.AddForce(force * getHitKnockbackMultiplier * direction, ForceMode2D.Impulse);
-        
+        rigidBody2D.AddForce(force * getHitKnockbackMultiplier * direction, ForceMode2D.Impulse);
+
         hitAudio.Play();
 
         spriteHolder.material = hitFlashMat;
@@ -124,7 +126,7 @@ public class SlimeEnemyController : MonoBehaviour, IAttackInteractable
     }
 
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         collision.gameObject.TryGetComponent(out PlayerHealthManager player);
         if (player != null) player.TakeDamage((collision.transform.position - transform.position).normalized, damage, force);
@@ -133,7 +135,7 @@ public class SlimeEnemyController : MonoBehaviour, IAttackInteractable
     private void StunReset()
     {
         agent.isStopped = false;
-        rigidBody.velocity = Vector2.zero;
+        rigidBody2D.velocity = Vector2.zero;
 
         if (health <= 0) Death();
     }

@@ -22,6 +22,7 @@ public class PlayerAbilityManager : MonoBehaviour
     {
         usingGamepad = playerInput.currentControlScheme.Equals(GamepadControlScheme);
         Cursor.visible = !usingGamepad;
+        Debug.Log("Device Changer");
     }
 
     private void OnEnable()

@@ -15,9 +15,18 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Aiming",
+                    "name": "GamepadAiming",
                     "type": "PassThrough",
                     "id": "d7438e96-d71c-4a2d-9e41-cca8be56bf26",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "MouseAiming",
+                    "type": "Value",
+                    "id": "92d2373a-b59e-45e0-ac23-20904258a844",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
@@ -142,23 +151,12 @@
                 },
                 {
                     "name": "",
-                    "id": "fe4f8861-46e0-4643-b267-b54f2dc34a38",
-                    "path": "<Mouse>/position",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard_Mouse",
-                    "action": "Aiming",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "42fbd3cb-bda5-4a27-a35e-90cc0b5e90f0",
                     "path": "<Gamepad>/rightStick",
                     "interactions": "",
                     "processors": "StickDeadzone",
                     "groups": "Gamepad",
-                    "action": "Aiming",
+                    "action": "GamepadAiming",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -249,6 +247,17 @@
                     "action": "SwitchAttack",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "74bd842e-f2bf-4623-a449-8b55b3c33fa4",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard_Mouse",
+                    "action": "MouseAiming",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

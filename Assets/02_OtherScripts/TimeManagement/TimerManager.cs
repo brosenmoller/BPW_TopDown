@@ -1,9 +1,9 @@
 ﻿using System;
 using UnityEngine;
 
-public class TimerManager : MonoBehaviour
+public class TimerManager : Singleton<TimerManager>
 {
-    public static event Action<float> OnTimerUpdate;
+    public event Action<float> OnTimerUpdate;
 
     public void FixedUpdate()
     {

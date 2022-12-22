@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6650040087545075408}
   - component: {fileID: 6650040087545075409}
+  - component: {fileID: 1989348256153786471}
   - component: {fileID: 6650040087545075410}
   - component: {fileID: 6650040087545075411}
   - component: {fileID: 6650040087545075415}
@@ -88,6 +89,26 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &1989348256153786471
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6650040087545071918}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 547fd168af913b94e8f4722eb36567c1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!58 &6650040087545075410
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -150,6 +171,7 @@ MonoBehaviour:
   force: 6
   hitFlashMat: {fileID: 2100000, guid: 6a5f43d3f6eec9b4ca953f0c0feed7dc, type: 2}
   hitAudio: {fileID: 11400000, guid: 8595ef3f26a9b0b498823385bf78e937, type: 2}
+  animator: {fileID: 0}
 --- !u!195 &6650040087545071917
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -170,5 +192,5 @@ NavMeshAgent:
   m_AutoRepath: 1
   m_Height: 1
   m_BaseOffset: 0.5
-  m_WalkableMask: 4294967295
+  m_WalkableMask: 1
   m_ObstacleAvoidanceType: 4

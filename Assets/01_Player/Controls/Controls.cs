@@ -37,9 +37,18 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Aiming"",
+                    ""name"": ""GamepadAiming"",
                     ""type"": ""PassThrough"",
                     ""id"": ""d7438e96-d71c-4a2d-9e41-cca8be56bf26"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""MouseAiming"",
+                    ""type"": ""Value"",
+                    ""id"": ""92d2373a-b59e-45e0-ac23-20904258a844"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -164,23 +173,12 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""fe4f8861-46e0-4643-b267-b54f2dc34a38"",
-                    ""path"": ""<Mouse>/position"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard_Mouse"",
-                    ""action"": ""Aiming"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""42fbd3cb-bda5-4a27-a35e-90cc0b5e90f0"",
                     ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
                     ""processors"": ""StickDeadzone"",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""Aiming"",
+                    ""action"": ""GamepadAiming"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -271,6 +269,17 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""action"": ""SwitchAttack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""74bd842e-f2bf-4623-a449-8b55b3c33fa4"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard_Mouse"",
+                    ""action"": ""MouseAiming"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -308,7 +317,8 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         // Default
         m_Default = asset.FindActionMap("Default", throwIfNotFound: true);
         m_Default_Movement = m_Default.FindAction("Movement", throwIfNotFound: true);
-        m_Default_Aiming = m_Default.FindAction("Aiming", throwIfNotFound: true);
+        m_Default_GamepadAiming = m_Default.FindAction("GamepadAiming", throwIfNotFound: true);
+        m_Default_MouseAiming = m_Default.FindAction("MouseAiming", throwIfNotFound: true);
         m_Default_Attack = m_Default.FindAction("Attack", throwIfNotFound: true);
         m_Default_Dodge = m_Default.FindAction("Dodge", throwIfNotFound: true);
         m_Default_SwitchAttack = m_Default.FindAction("SwitchAttack", throwIfNotFound: true);
@@ -372,7 +382,8 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Default;
     private IDefaultActions m_DefaultActionsCallbackInterface;
     private readonly InputAction m_Default_Movement;
-    private readonly InputAction m_Default_Aiming;
+    private readonly InputAction m_Default_GamepadAiming;
+    private readonly InputAction m_Default_MouseAiming;
     private readonly InputAction m_Default_Attack;
     private readonly InputAction m_Default_Dodge;
     private readonly InputAction m_Default_SwitchAttack;
@@ -381,7 +392,8 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         private @Controls m_Wrapper;
         public DefaultActions(@Controls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_Default_Movement;
-        public InputAction @Aiming => m_Wrapper.m_Default_Aiming;
+        public InputAction @GamepadAiming => m_Wrapper.m_Default_GamepadAiming;
+        public InputAction @MouseAiming => m_Wrapper.m_Default_MouseAiming;
         public InputAction @Attack => m_Wrapper.m_Default_Attack;
         public InputAction @Dodge => m_Wrapper.m_Default_Dodge;
         public InputAction @SwitchAttack => m_Wrapper.m_Default_SwitchAttack;
@@ -397,9 +409,12 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @Movement.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnMovement;
                 @Movement.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnMovement;
                 @Movement.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnMovement;
-                @Aiming.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnAiming;
-                @Aiming.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnAiming;
-                @Aiming.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnAiming;
+                @GamepadAiming.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnGamepadAiming;
+                @GamepadAiming.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnGamepadAiming;
+                @GamepadAiming.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnGamepadAiming;
+                @MouseAiming.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnMouseAiming;
+                @MouseAiming.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnMouseAiming;
+                @MouseAiming.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnMouseAiming;
                 @Attack.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnAttack;
                 @Attack.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnAttack;
                 @Attack.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnAttack;
@@ -416,9 +431,12 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @Movement.started += instance.OnMovement;
                 @Movement.performed += instance.OnMovement;
                 @Movement.canceled += instance.OnMovement;
-                @Aiming.started += instance.OnAiming;
-                @Aiming.performed += instance.OnAiming;
-                @Aiming.canceled += instance.OnAiming;
+                @GamepadAiming.started += instance.OnGamepadAiming;
+                @GamepadAiming.performed += instance.OnGamepadAiming;
+                @GamepadAiming.canceled += instance.OnGamepadAiming;
+                @MouseAiming.started += instance.OnMouseAiming;
+                @MouseAiming.performed += instance.OnMouseAiming;
+                @MouseAiming.canceled += instance.OnMouseAiming;
                 @Attack.started += instance.OnAttack;
                 @Attack.performed += instance.OnAttack;
                 @Attack.canceled += instance.OnAttack;
@@ -453,7 +471,8 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     public interface IDefaultActions
     {
         void OnMovement(InputAction.CallbackContext context);
-        void OnAiming(InputAction.CallbackContext context);
+        void OnGamepadAiming(InputAction.CallbackContext context);
+        void OnMouseAiming(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnDodge(InputAction.CallbackContext context);
         void OnSwitchAttack(InputAction.CallbackContext context);

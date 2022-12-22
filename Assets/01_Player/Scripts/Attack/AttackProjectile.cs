@@ -32,14 +32,12 @@ public class AttackProjectile : MonoBehaviour
         collision.TryGetComponent(out IAttackInteractable attackInteractable);
         attackInteractable?.OnAttackInteract(direction, damage, force);
 
-        Destroy(gameObject);
+        InitiateDestroy();
     }
 
-    private void OnDestroy()
+    private void InitiateDestroy()
     {
-        if (particlesOnDestroy != null)
-        {
-            Instantiate(particlesOnDestroy, transform.position, Quaternion.identity);
-        }
+        Instantiate(particlesOnDestroy, transform.position, Quaternion.identity);
+        Destroy(gameObject);
     }
 }

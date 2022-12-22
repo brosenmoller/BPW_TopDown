@@ -38,16 +38,18 @@ public class PlayerAttackManager : MonoBehaviour
     {
         abilityManager.controls.Default.SwitchAttack.performed += SwitchAttack;
 
-        abilityManager.controls.Default.Attack.performed += CheckForAttack;
-        abilityManager.controls.Default.Aiming.performed += SetAttackDirection;
+        abilityManager.controls.Default.Attack.performed += PerformCurrentAttack;
+        abilityManager.controls.Default.MouseAiming.performed += SetAttackDirectionMouse;
+        abilityManager.controls.Default.GamepadAiming.performed += SetAttackDirectionGamePad;
     }
 
     private void OnDisable()
     {
         abilityManager.controls.Default.SwitchAttack.performed -= SwitchAttack;
 
-        abilityManager.controls.Default.Attack.performed -= CheckForAttack;
-        abilityManager.controls.Default.Aiming.performed -= SetAttackDirection;
+        abilityManager.controls.Default.Attack.performed -= PerformCurrentAttack;
+        abilityManager.controls.Default.MouseAiming.performed -= SetAttackDirectionMouse;
+        abilityManager.controls.Default.GamepadAiming.performed -= SetAttackDirectionGamePad;
     }
 
     private void SwitchAttack(InputAction.CallbackContext context)
@@ -56,37 +58,22 @@ public class PlayerAttackManager : MonoBehaviour
         weaponAnimator.runtimeAnimatorController = currentAttackItem.weaponAnimatorController;
     }
 
-    private void CheckForAttack(InputAction.CallbackContext context)
+    private void PerformCurrentAttack(InputAction.CallbackContext context)
     {
         if (attackDirection == Vector2.zero || currentAttackItem == null) { return; }
 
         currentAttackItem.PerformAttack();
     }
 
-    private void FixedUpdate()
+    private void SetAttackDirectionMouse(InputAction.CallbackContext context) => SetAttackDirection(false, context.ReadValue<Vector2>());
+
+    private void SetAttackDirectionGamePad(InputAction.CallbackContext context) => SetAttackDirection(true, context.ReadValue<Vector2>());
+
+    private void SetAttackDirection(bool isGameplad, Vector2 vector2Input)
     {
-        if (abilityManager.controls.Default.Movement.IsPressed())
-        {
-            if (!abilityManager.usingGamepad)
-            {
-                SetAttackDirectionByMousePosition(previousVector2Input);
-                LookTowardsAttackDirection();
-            }
-        }
+        if (isGameplad != abilityManager.usingGamepad) { return; }
 
-        currentAttackItem.OnUpdate();
-
-        if (weaponHolder.rotation != targetRotation)
-        {
-            weaponHolder.rotation = targetRotation;
-        }
-    }
-
-    private void SetAttackDirection(InputAction.CallbackContext context)
-    {
-        Vector2 vector2Input = context.ReadValue<Vector2>();
         if (previousVector2Input == vector2Input) { return; }
-
         previousVector2Input = vector2Input;
 
         if (abilityManager.usingGamepad)
@@ -114,6 +101,25 @@ public class PlayerAttackManager : MonoBehaviour
     {
         float angle = Vector2.SignedAngle(Vector2.right, attackDirection);
         targetRotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
+    }
+
+    private void FixedUpdate()
+    {
+        if (abilityManager.controls.Default.Movement.IsPressed())
+        {
+            if (!abilityManager.usingGamepad)
+            {
+                SetAttackDirectionByMousePosition(previousVector2Input);
+                LookTowardsAttackDirection();
+            }
+        }
+
+        currentAttackItem.OnUpdate();
+
+        if (weaponHolder.rotation != targetRotation)
+        {
+            weaponHolder.rotation = targetRotation;
+        }
     }
 
     private void OnDrawGizmosSelected()

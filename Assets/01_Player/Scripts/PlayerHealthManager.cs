@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -6,11 +7,14 @@ public class PlayerHealthManager : MonoBehaviour
 {
     [Header("Player Health Settings")]
     [SerializeField] private int maxHealth;
+    public int MaxHealth => maxHealth;
 
     [Header("Hit effects")]
     [SerializeField] private float getHitKnockbackMultiplier;
     [SerializeField] private float stunDuration;
+    [SerializeField] private float hitInvincibilityDuration;
     [SerializeField] private Material hitFlashMat;
+    [SerializeField] private AudioObject hitAudio;
 
     private PlayerAbilityManager abilityManager;
 
@@ -25,7 +29,11 @@ public class PlayerHealthManager : MonoBehaviour
     public int Health {
         private set 
         {
-            _health = value;
+            if (_health != value) 
+            {
+                _health = value;
+                EventManager.InvokeEvent(EventType.ON_PLAYER_HEALTH_CHANGE);
+            }
 
             if (_health <= 0)
             {
@@ -44,29 +52,33 @@ public class PlayerHealthManager : MonoBehaviour
         normalMat = spriteHolder.material;
     }
 
+    public void AddHealth(int healthIncrease)
+    {
+        Health += healthIncrease;
+    }
+
     public void TakeDamage(Vector2 direction, int damage, float force)
     {
         if (!canTakeDamage) { return; }
 
         Health -= damage;
-        StartCoroutine(DamageEffects(direction, force));
+        DamageEffects(direction, force);
     }
 
-    private IEnumerator DamageEffects(Vector2 direction, float force)
+    private void DamageEffects(Vector2 direction, float force)
     {
         rigidBody2D.AddForce(force * getHitKnockbackMultiplier * direction, ForceMode2D.Impulse);
+
+        hitAudio.Play();
+
         spriteHolder.material = hitFlashMat;
-        //AudioManager.Instance.Play("FungusHit");
-
+        new Timer(.1f, () => spriteHolder.material = normalMat);
+        
         abilityManager.DeactivateAllMovementAbilities();
+        new Timer(stunDuration, () => abilityManager.ReactivateAllMovementAbilities());
 
-        yield return new WaitForSeconds(.1f);
-
-        spriteHolder.material = normalMat;
-
-        yield return new WaitForSeconds(stunDuration - .1f);
-
-        abilityManager.ReactivateAllMovementAbilities();
+        canTakeDamage = false;
+        new Timer(hitInvincibilityDuration, () => canTakeDamage = true);
     }
 
 

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SlimeEnemyChaseState : State<SlimeEnemyController>
 {
@@ -8,6 +7,7 @@ public class SlimeEnemyChaseState : State<SlimeEnemyController>
     public override void OnEnter()
     {
         stateOwner.Controller.SetAgentDisabled(false);
+        stateOwner.Controller.animator.SetBool("IsChasing", true);
     }
 
     public override void OnUpdate()
@@ -17,5 +17,10 @@ public class SlimeEnemyChaseState : State<SlimeEnemyController>
         timer = Time.time + stateOwner.Controller.updateDelay;
 
         stateOwner.Controller.SetAgentDestination(stateOwner.Controller.target.position);
+    }
+
+    public override void OnExit()
+    {
+        stateOwner.Controller.animator.SetBool("IsChasing", false);
     }
 }

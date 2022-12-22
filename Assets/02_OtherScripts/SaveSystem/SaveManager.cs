@@ -9,7 +9,7 @@ using System.Runtime.Serialization;
 
 public class SaveManager : Singleton<SaveManager>
 {
-    protected override void SingletonAwake()
+    private void Start()
     {
         Load();
     }
