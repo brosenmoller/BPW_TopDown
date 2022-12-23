@@ -4,7 +4,6 @@ using TMPro;
 
 public class GameOverlayView : UIView
 {
-    [SerializeField] private TextMeshProUGUI currencyText;
     [SerializeField] private Slider healthBar;
 
     private PlayerHealthManager playerHealthManager;
@@ -16,5 +15,4 @@ public class GameOverlayView : UIView
     }
 
     public void SetHealthBar() => healthBar.value = playerHealthManager.Health / (float)playerHealthManager.MaxHealth;
-    public void SetCurrency(int currency) => currencyText.text = currency.ToString();
 }
