@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEditor.Animations;
 
 public abstract class BaseAttackItem : ScriptableObject
 {
@@ -7,7 +6,7 @@ public abstract class BaseAttackItem : ScriptableObject
     [SerializeField] protected int damage;
     [SerializeField] protected float force;
     [SerializeField] protected AudioObject attackSound;
-    public AnimatorController weaponAnimatorController;
+    public RuntimeAnimatorController weaponAnimatorController;
 
     protected PlayerAttackManager attackManager;
 
