@@ -1,9 +1,8 @@
 using UnityEngine;
-using UnityEngine.AI;
 
-public class SlimeEnemyController : MonoBehaviour, IAttackInteractable
+public class SlimeEnemyController : BaseEnemyController, IAttackInteractable
 {
-    [Header("Movement Settings")]
+    [Header("Slime Settings")]
     public Transform target;
     [SerializeField] private float speed;
     public float updateDelay;
@@ -11,49 +10,7 @@ public class SlimeEnemyController : MonoBehaviour, IAttackInteractable
     public Vector2 wanderDelay;
     public float detectionRange;
 
-    [Header("Combat")]
-    [SerializeField] private int startHealth;
-    [SerializeField] private float getHitKnockbackMultiplier;
-    [SerializeField] private float stunTime;
-    [SerializeField] private int damage;
-    [SerializeField] private float force;
-
-    [Header("Effects")]
-    [SerializeField] private Material hitFlashMat;
-    [SerializeField] private AudioObject hitAudio;
-
-    private Material normalMat;
-
-    private NavMeshAgent agent;
-    private Rigidbody2D rigidBody2D;
-    private SpriteRenderer spriteHolder;
-    [HideInInspector] public Animator animator;
-
-    private int health;
-
-    private StateMachine<SlimeEnemyController> stateMachine;
-
-    private void Awake()
-    {
-        agent = GetComponent<NavMeshAgent>();
-        agent.updateRotation = false;
-        agent.updateUpAxis = false;
-
-        rigidBody2D = GetComponent<Rigidbody2D>();
-        animator= GetComponent<Animator>();
-
-        spriteHolder = GetComponent<SpriteRenderer>();
-        normalMat = spriteHolder.material;
-
-        health = startHealth;
-    }
-
-    private void Start()
-    {
-        SetupStateMachine();
-    }
-
-    private void SetupStateMachine()
+    protected override void SetupStateMachine()
     {
         State<SlimeEnemyController>[] states = new State<SlimeEnemyController>[] {
             new SlimeEnemyWanderState(),
@@ -64,11 +21,6 @@ public class SlimeEnemyController : MonoBehaviour, IAttackInteractable
         stateMachine.AddTransition(new Transition(typeof(SlimeEnemyWanderState), typeof(SlimeEnemyChaseState), IsPlayerInRange));
         stateMachine.AddTransition(new Transition(typeof(SlimeEnemyChaseState), typeof(SlimeEnemyWanderState), () => !IsPlayerInRange()));
         stateMachine.ChangeState(typeof(SlimeEnemyWanderState));
-    }
-
-    private void FixedUpdate()
-    {
-        stateMachine.OnFixedUpdate();
     }
 
     private bool IsPlayerInRange()
@@ -85,64 +37,5 @@ public class SlimeEnemyController : MonoBehaviour, IAttackInteractable
         if (playerAbilityManager == null) { return false; }
 
         return true;
-    }
-
-    public void SetAgentDisabled(bool activation)
-    {
-        agent.isStopped = activation;
-    }
-
-    public bool SetAgentDestination(Vector2 target)
-    {
-        NavMeshPath path = new();
-
-        if (agent.CalculatePath(target, path) && path.status == NavMeshPathStatus.PathComplete)
-        {
-            agent.SetPath(path);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public void OnAttackInteract(Vector2 direction, int damage, float force)
-    {
-        health -= damage;
-
-        //AudioManager.Instance.Play("hit");
-
-        agent.isStopped = true;
-
-        rigidBody2D.AddForce(force * getHitKnockbackMultiplier * direction, ForceMode2D.Impulse);
-
-        hitAudio.Play();
-
-        spriteHolder.material = hitFlashMat;
-        new Timer(.1f, () => spriteHolder.material = normalMat);
-
-        Invoke(nameof(StunReset), stunTime);
-    }
-
-
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        collision.gameObject.TryGetComponent(out PlayerHealthManager player);
-        if (player != null) player.TakeDamage((collision.transform.position - transform.position).normalized, damage, force);
-    }
-
-    private void StunReset()
-    {
-        agent.isStopped = false;
-        rigidBody2D.velocity = Vector2.zero;
-
-        if (health <= 0) Death();
-    }
-
-    private void Death()
-    {
-        StopAllCoroutines();
-        Destroy(gameObject);
     }
 }

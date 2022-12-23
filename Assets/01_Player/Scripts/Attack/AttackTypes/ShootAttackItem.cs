@@ -33,7 +33,11 @@ public class ShootAttackItem : BaseAttackItem
         if (!canShoot) { return; }
 
         attackManager.weaponAnimator.SetTrigger("AttackTrigger");
-        attackSound.Play();
+        
+        if (!(attackSound.loop && attackSound.IsPlaying)) 
+        {
+            attackSound.Play();
+        }
 
         GameObject newBullet = Instantiate(bullet, attackManager.weaponAnimator.transform.position, Quaternion.identity);
         newBullet.GetComponent<AttackProjectile>().Setup(bulletSpeed, attackManager.attackDirection, damage, force);
@@ -46,5 +50,10 @@ public class ShootAttackItem : BaseAttackItem
 
         canShoot = false;
         cooldownTimer.Reset();
+    }
+
+    public override void OnAttackEnd()
+    {
+        if (attackSound.loop) { attackSound.Stop(); }
     }
 }

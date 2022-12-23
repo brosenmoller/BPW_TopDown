@@ -17,11 +17,10 @@ public abstract class BaseAttackItem : ScriptableObject
         SetupSpecificItem();
     }
     protected virtual void SetupSpecificItem() { }
-
     public virtual void OnUpdate() { }
-
     public virtual void OnDrawGizmosSelected() { }
-
+    public virtual void OnAttackEnd() { }
     public abstract void PerformAttack();
+
 }
 

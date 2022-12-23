@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05f564637e0c4b845bd8100dd08aeff3, type: 3}
+  m_Name: BetterSword
+  m_EditorClassIdentifier: 
+  damage: 10
+  force: 8
+  attackSound: {fileID: 11400000, guid: fcd15696faddf4a45880648a9d8e593f, type: 2}
+  weaponAnimatorController: {fileID: 9100000, guid: 5efbea940628c4b44a53645b55060d29, type: 2}
+  cooldownTime: 0.5
+  hitRadius: 0.7
+  hitOffset: 1
+  attackDuration: 0.3
+  attackLayerMask:
+    serializedVersion: 2
+    m_Bits: 1

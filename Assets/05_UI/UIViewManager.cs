@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class UIViewManager : Singleton<UIViewManager>
 {

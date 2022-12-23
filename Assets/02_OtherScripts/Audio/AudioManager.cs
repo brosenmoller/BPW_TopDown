@@ -5,40 +5,40 @@ using System.Collections.Generic;
 
 public class AudioManager : Singleton<AudioManager>
 {
-    //[Header("Music Settings")]
-    //[SerializeField] private float musicFadeDuration = 1f;
+    [Header("Music Settings")]
+    [SerializeField] private float musicFadeDuration = 1f;
 
-    //private List<AudioObject> music = new();
+    private List<AudioObject> music = new();
 
-    //public void PlayMusic(AudioObject audioObject)
-    //{
-    //    foreach (AudioObject m in music)
-    //    {
-    //        if (m.Source.isPlaying)
-    //        {
-    //            if (m.name == name) return;
+    public void PlayMusic(AudioObject audioObject)
+    {
+        foreach (AudioObject m in music)
+        {
+            if (m.Source.isPlaying)
+            {
+                if (m.name == name) return;
 
-    //            // fade old music out and new in
-    //            StartCoroutine(FadingSound(m.Source, 0, musicFadeDuration, () => m.PlayFadeIn(musicFadeDuration)));
-    //            return;
-    //        }
-    //    }
-    //}
+                // fade old music out and new in
+                StartCoroutine(FadingSound(m.Source, 0, musicFadeDuration, () => m.PlayFadeIn(musicFadeDuration)));
+                return;
+            }
+        }
+    }
 
     public IEnumerator FadingSound(AudioSource audioSource, float targetVolume, float fadeDuration, Action onComplete = null)
     {
-        float elapsed_time = 0;
+        float elapsedTime = 0;
         float startVolume = audioSource.volume;
 
-        while (elapsed_time <= fadeDuration)
+        while (elapsedTime <= fadeDuration)
         {
-            float newVolume = Mathf.Lerp(startVolume, targetVolume, Mathf.Pow((elapsed_time / fadeDuration), 2));
+            float newVolume = Mathf.Lerp(startVolume, targetVolume, Mathf.Pow(elapsedTime / fadeDuration, 2));
 
             audioSource.volume = newVolume;
 
             yield return null;
 
-            elapsed_time += Time.deltaTime;
+            elapsedTime += Time.deltaTime;
         }
 
         if (audioSource.volume < 0.01f) audioSource.Stop();

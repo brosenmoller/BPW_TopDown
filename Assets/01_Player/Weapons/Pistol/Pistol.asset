@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 586c2e6f9ccf44d4ebcbe9f8a0c18341, type: 3}
+  m_Name: Pistol
+  m_EditorClassIdentifier: 
+  damage: 3
+  force: 4
+  attackSound: {fileID: 11400000, guid: 27cc4abdcb25ebb449c77d944f45e675, type: 2}
+  weaponAnimatorController: {fileID: 9100000, guid: a4666735047871848931912a29c1e032, type: 2}
+  cooldownTime: 0.8
+  bulletSpeed: 12
+  bullet: {fileID: 1815727909366601966, guid: e79226067acfa4a45b0d23e65e9bf70a, type: 3}
+  shootParticles: {fileID: 6491432870799422109, guid: c0fa4a43d8cc84147a20aa925621ffdc, type: 3}

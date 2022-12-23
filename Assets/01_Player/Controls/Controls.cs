@@ -76,7 +76,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""name"": ""SwitchAttack"",
                     ""type"": ""Value"",
                     ""id"": ""900139e5-0152-4a6d-9c1f-cfce8c502b94"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -207,7 +207,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Q and E"",
                     ""id"": ""bb3a2586-5dfd-499b-a79b-e280b45e8701"",
-                    ""path"": ""1DAxis(minValue=0,whichSideWins=2)"",
+                    ""path"": ""1DAxis(whichSideWins=2)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -240,7 +240,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Bumpers"",
                     ""id"": ""cb3ae950-182f-4f3c-9f62-a7e8b51802b2"",
-                    ""path"": ""1DAxis(minValue=0,whichSideWins=2)"",
+                    ""path"": ""1DAxis(whichSideWins=2)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

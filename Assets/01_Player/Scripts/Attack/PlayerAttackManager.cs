@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Collections.Generic;
 
 public class PlayerAttackManager : MonoBehaviour
 {
@@ -20,6 +20,8 @@ public class PlayerAttackManager : MonoBehaviour
     private Vector2 previousVector2Input;
     private Quaternion targetRotation;
 
+    private bool isPerformingAttack = false;
+
     private void Awake()
     {
         abilityManager = GetComponent<PlayerAbilityManager>();
@@ -38,7 +40,9 @@ public class PlayerAttackManager : MonoBehaviour
     {
         abilityManager.controls.Default.SwitchAttack.performed += SwitchAttack;
 
-        abilityManager.controls.Default.Attack.performed += PerformCurrentAttack;
+        abilityManager.controls.Default.Attack.started += StartAttack;
+        abilityManager.controls.Default.Attack.canceled += EndAttack;
+
         abilityManager.controls.Default.MouseAiming.performed += SetAttackDirectionMouse;
         abilityManager.controls.Default.GamepadAiming.performed += SetAttackDirectionGamePad;
     }
@@ -47,18 +51,33 @@ public class PlayerAttackManager : MonoBehaviour
     {
         abilityManager.controls.Default.SwitchAttack.performed -= SwitchAttack;
 
-        abilityManager.controls.Default.Attack.performed -= PerformCurrentAttack;
+        abilityManager.controls.Default.Attack.started -= StartAttack;
+        abilityManager.controls.Default.Attack.canceled -= EndAttack;
+
         abilityManager.controls.Default.MouseAiming.performed -= SetAttackDirectionMouse;
         abilityManager.controls.Default.GamepadAiming.performed -= SetAttackDirectionGamePad;
     }
 
     private void SwitchAttack(InputAction.CallbackContext context)
     {
-        currentAttackItem = accesableAttackItems[(int)context.ReadValue<float>()];
+        int currentAttackItemIndex = accesableAttackItems.IndexOf(currentAttackItem);
+        currentAttackItemIndex += (int)context.ReadValue<float>();
+        
+        if (currentAttackItemIndex < 0) { currentAttackItemIndex = accesableAttackItems.Count - 1; }
+        else if (currentAttackItemIndex > accesableAttackItems.Count - 1) { currentAttackItemIndex = 0; }
+
+        currentAttackItem = accesableAttackItems[currentAttackItemIndex];
         weaponAnimator.runtimeAnimatorController = currentAttackItem.weaponAnimatorController;
     }
 
-    private void PerformCurrentAttack(InputAction.CallbackContext context)
+    private void StartAttack(InputAction.CallbackContext context) => isPerformingAttack = true;
+    private void EndAttack(InputAction.CallbackContext context)
+    {
+        isPerformingAttack = false;
+        currentAttackItem.OnAttackEnd();
+    }
+
+    private void PerformCurrentAttack()
     {
         if (attackDirection == Vector2.zero || currentAttackItem == null) { return; }
 
@@ -114,11 +133,23 @@ public class PlayerAttackManager : MonoBehaviour
             }
         }
 
+        if (isPerformingAttack) { PerformCurrentAttack(); }
         currentAttackItem.OnUpdate();
 
         if (weaponHolder.rotation != targetRotation)
         {
             weaponHolder.rotation = targetRotation;
+        }
+    }
+
+    public void GiveAttackItem(BaseAttackItem attackItem)
+    {
+        if (!accesableAttackItems.Contains(attackItem))
+        {
+            attackItem.Setup(this);
+            accesableAttackItems.Add(attackItem);
+            currentAttackItem.OnAttackEnd();
+            currentAttackItem = attackItem;
         }
     }
 
